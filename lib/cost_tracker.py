@@ -28,26 +28,33 @@ def parse_date(date_str: str) -> str:
     return date_str
 
 
-def add_bill(date: str, provider: str, cost_usd: float, note: str = "") -> dict:
-    """Add a daily bill.
+def add_bill(date: str, provider: str, cost: float, currency: str = "USD", note: str = "") -> dict:
+    """Add a daily bill with original currency + USD normalization.
     
     Args:
         date: yymmdd format (e.g., "260503" for 2026-05-03)
         provider: e.g., "kimi", "openai", "anthropic"
-        cost_usd: cost in USD
+        cost: cost in original currency
+        currency: "USD", "CNY", "AUD"
         note: optional note
     """
+    # Exchange rates (approximate, user can adjust)
+    rates = {"USD": 1.0, "CNY": 0.138, "AUD": 0.64}
+    rate = rates.get(currency.upper(), 1.0)
+    cost_usd = round(cost * rate, 2)
+
     data = _load()
     date_norm = parse_date(date)
     entry = {
         "date": date_norm,
         "date_raw": date,
         "provider": provider.lower().strip(),
-        "cost_usd": round(cost_usd, 2),
+        "cost_original": round(cost, 2),
+        "currency": currency.upper(),
+        "cost_usd": cost_usd,
         "note": note,
         "added_at": int(time.time()),
     }
-    # Append — no dedup; user may have multiple charges same day
     data["bills"].append(entry)
     data["bills"].sort(key=lambda x: x["date"])
     data["total_usd"] = round(sum(b["cost_usd"] for b in data["bills"]), 2)

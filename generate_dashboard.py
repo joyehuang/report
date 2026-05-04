@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.wakatime import fetch_summary
 from lib.dashboard_template import render_dashboard
+from lib.wakatime_history import merge_day
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "archive")
 MELBOURNE_TZ = timezone(timedelta(hours=10))
@@ -68,6 +69,9 @@ def generate():
         date_str = current.strftime("%Y-%m-%d")
         day_data = fetch_summary(date_str)
         if day_data:
+            # Sync to local history cache
+            merge_day(date_str, day_data)
+
             total_seconds += day_data.get("total_seconds", 0)
             total_ai_in += day_data.get("ai_input_tokens", 0)
             total_ai_out += day_data.get("ai_output_tokens", 0)

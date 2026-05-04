@@ -121,6 +121,43 @@
     max-width: 400px;
   }
 
+  /* Social / nav links below header */
+  .nav-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    animation: fadeUp 0.8s ease 0.15s forwards;
+    opacity: 0;
+  }
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .nav-links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-card-hover);
+  }
+  .nav-links a svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .featured {
     margin-bottom: 48px;
     animation: fadeUp 0.8s ease 0.2s forwards;
@@ -323,7 +360,43 @@
   <header class="site-header">
     <h1>AI <span>Usage</span> Report</h1>
     <p class="subtitle">Daily insights from AI-assisted workflows. Hermes Agent sessions + WakaTime coding data.</p>
+    <div class="nav-links">
+      <a href="https://joyehuang.me" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        joyehuang.me
+      </a>
+      <a href="https://github.com/joyehuang" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        github.com/joyehuang
+      </a>
+    </div>
   </header>
+
+  <section class="featured">
+    <div class="featured-label">Cumulative Overview</div>
+    <a class="featured-card" href="archive/overview.html">
+      <div class="date">Cumulative Overview</div>
+      <div class="title">AI Usage Overview</div>
+      <div class="featured-stats">
+        <div class="stat">
+          <div class="num">$281</div>
+          <div class="lbl">Cost</div>
+        </div>
+        <div class="stat">
+          <div class="num">7d</div>
+          <div class="lbl">Recorded</div>
+        </div>
+        <div class="stat">
+          <div class="num">198.6M</div>
+          <div class="lbl">Tokens</div>
+        </div>
+        <div class="stat">
+          <div class="num">198</div>
+          <div class="lbl">Prompts</div>
+        </div>
+      </div>
+    </a>
+  </section>
 
   <section class="featured">
     <div class="featured-label">Latest Receipt</div>
@@ -394,8 +467,9 @@
   </section>
 
   <footer class="footer">
-    <a href="https://joyehuang.me" target="_blank">joyehuang.me</a> · 
-    <a href="https://github.com/joyehuang/report" target="_blank">GitHub</a>
+    <a href="https://joyehuang.me" target="_blank">joyehuang.me</a> ·
+    <a href="https://github.com/joyehuang" target="_blank">GitHub</a> ·
+    <a href="https://github.com/joyehuang/report" target="_blank">Source</a>
   </footer>
 
 </div>

@@ -76,3 +76,44 @@ def aggregate_stats(sessions: List[sqlite3.Row]) -> Dict[str, Any]:
         "total_tools": sum(s['tool_call_count'] or 0 for s in sessions),
         "session_count": len(sessions),
     }
+
+
+def fetch_all_sessions() -> List[sqlite3.Row]:
+    """Fetch all historical sessions from state.db."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, source, model, started_at, ended_at, message_count, tool_call_count,
+               input_tokens, output_tokens, cache_read_tokens, cache_write_tokens,
+               reasoning_tokens, title
+        FROM sessions
+        ORDER BY started_at DESC
+    """)
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+
+def aggregate_all_time() -> Dict[str, Any]:
+    """Aggregate all-time stats from state.db."""
+    sessions = fetch_all_sessions()
+    models = Counter()
+    sources = Counter()
+    all_tools = Counter()
+
+    for s in sessions:
+        if s['model']:
+            models[s['model']] += 1
+        if s['source']:
+            sources[s['source']] += 1
+        # Count tool calls per session
+        tools = fetch_tool_calls(s['id'])
+        all_tools.update(tools)
+
+    stats = aggregate_stats(sessions)
+    stats['models'] = models
+    stats['sources'] = sources
+    stats['top_tools'] = all_tools.most_common(10)
+    stats['sessions'] = sessions
+    return stats

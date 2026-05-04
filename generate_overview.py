@@ -30,17 +30,16 @@ def fmt_duration(seconds):
 
 
 def generate():
-    # Hermes Agent all-time stats
+    # Hermes Agent all-time stats (Dashboard 口径: input + output only)
     hermes = aggregate_all_time()
-    hermes_tokens = (hermes.get("total_input", 0) + hermes.get("total_output", 0) +
-                     hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0) +
-                     hermes.get("total_reasoning", 0))
+    hermes_tokens = hermes.get("total_input", 0) + hermes.get("total_output", 0)
+    hermes_cache = hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0)
 
     # WakaTime cumulative stats
     waka = get_cumulative()
     waka_tokens = waka.get("total_ai_in", 0) + waka.get("total_ai_out", 0)
 
-    # Grand total
+    # Grand total (Hermes input+output + WakaTime, cache excluded)
     grand_tokens = hermes_tokens + waka_tokens
     grand_cost = get_summary()
 

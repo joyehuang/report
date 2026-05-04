@@ -148,9 +148,7 @@ def generate():
         waka = get_cumulative()
         cost = get_summary()
         hermes = aggregate_all_time()
-        hermes_tokens = (hermes.get("total_input", 0) + hermes.get("total_output", 0) +
-                         hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0) +
-                         hermes.get("total_reasoning", 0))
+        hermes_tokens = hermes.get("total_input", 0) + hermes.get("total_output", 0)
         waka_tokens = waka.get("total_ai_in", 0) + waka.get("total_ai_out", 0)
         grand_tokens = hermes_tokens + waka_tokens
         overview_card = f"""    <a class="featured-card" href="archive/overview.html">

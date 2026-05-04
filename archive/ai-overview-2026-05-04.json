@@ -1,0 +1,25 @@
+{
+  "date_range": "Apr 28 - May 4, 2026",
+  "coding_time": "41h 22m",
+  "ai_in": "197.9M",
+  "ai_out": "706.3K",
+  "prompts": "198",
+  "tokens_total": "198.6M",
+  "ai_additions": "8.4K",
+  "line_changes": "9.3K",
+  "cost": "$0",
+  "categories": [
+    {
+      "name": "Coding",
+      "text": "27h 35m"
+    },
+    {
+      "name": "AI Coding",
+      "text": "13h 10m"
+    },
+    {
+      "name": "Debugging",
+      "text": "36m"
+    }
+  ]
+}

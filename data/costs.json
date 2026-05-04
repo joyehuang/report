@@ -1,0 +1,21 @@
+{
+  "bills": [
+    {
+      "date": "2026-05-03",
+      "date_raw": "260503",
+      "provider": "kimi",
+      "cost_usd": 150,
+      "note": "monthly",
+      "added_at": 1777904895
+    },
+    {
+      "date": "2026-05-03",
+      "date_raw": "260503",
+      "provider": "kimi",
+      "cost_usd": 50,
+      "note": "top-up",
+      "added_at": 1777904895
+    }
+  ],
+  "total_usd": 200
+}

@@ -5,6 +5,16 @@ import os
 import sys
 from datetime import datetime, timedelta, timezone
 
+# Load env from ~/.hermes/.env
+env_path = os.path.expanduser("~/.hermes/.env")
+if os.path.exists(env_path):
+    with open(env_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, val = line.split("=", 1)
+                os.environ.setdefault(key, val)
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.wakatime import fetch_summary
@@ -124,6 +134,33 @@ def generate():
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Dashboard saved: {filepath}")
+
+    # Write summary JSON for index.html
+    import json
+    summary = {
+        "date_range": date_range,
+        "coding_time": coding_time,
+        "ai_in": tokens_in,
+        "ai_out": tokens_out,
+        "prompts": prompts,
+        "tokens_total": tokens_total,
+        "ai_additions": ai_additions,
+        "line_changes": line_changes,
+        "cost": cost,
+        "categories": categories,
+    }
+    summary_path = os.path.join(OUTPUT_DIR, f"ai-overview-{end_str}.json")
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+    print(f"Summary saved: {summary_path}")
+
+    # Regenerate index.html
+    try:
+        import generate_index
+        generate_index.generate()
+    except Exception as e:
+        print(f"index.html regeneration skipped: {e}")
+
     return filepath
 
 

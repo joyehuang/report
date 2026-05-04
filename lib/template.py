@@ -13,9 +13,6 @@ def render_receipt(**data):
     total_fmt = fmt(data["total_tokens"])
     input_fmt = fmt(data["total_input"])
     output_fmt = fmt(data["total_output"])
-    cache_r_fmt = fmt(data["total_cache_read"])
-    cache_w_fmt = fmt(data["total_cache_write"])
-    reason_fmt = fmt(data["total_reasoning"])
 
     # Models
     max_model = max(data["models"].values()) if data["models"] else 1
@@ -64,36 +61,12 @@ def render_receipt(**data):
       </div>
 """
 
-    # WakaTime
-    waka_section = ""
-    waka = data.get("waka")
-    if waka:
-        coding_time = waka["total_text"]
-        cat_rows = ""
-        for cat in waka["categories"]:
-            cat_rows += f"""        <div class="waka-cat">
-          <span class="waka-dot"></span>
-          <span class="waka-name">{cat['name']}</span>
-          <span class="waka-val">{cat['text']}</span>
-        </div>
-"""
-        waka_section = f"""    <div class="section">
-      <div class="section-title">\u25a0 Coding Activity</div>
-      <div class="waka-main">
-        <div class="waka-big">{coding_time}</div>
-        <div class="waka-sublabel">Total Time</div>
-      </div>
-      <div class="waka-cats">
-{cat_rows}      </div>
-    </div>
-"""
-
     return f"""<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joye's Daily Receipt \u2014 {date_str}</title>
+  <title>Joye's Hermes Agent Daily Receipt — {display_date}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -104,31 +77,31 @@ def render_receipt(**data):
     --text-secondary: hsl(240 5% 74.9%);
     --text-muted: hsl(240 5% 50%);
     --accent: hsl(195 95% 85%);
-    --accent-cool: hsl(195 95% 85%);
     --border: hsl(240 3.7% 15.9%);
     --border-dashed: hsl(240 3.7% 15.9%);
     --card-bg: hsl(240 3.7% 15.9%);
     --bar-bg: hsl(240 3.7% 15.9%);
     --bar-fill: hsl(195 95% 85%);
     --printer-led: hsl(142 60% 65%);
+    --toggle-bg: hsl(240 3.7% 15.9%);
+    --toggle-icon: hsl(0 0% 98%);
   }}
 
-  @media (prefers-color-scheme: light) {{
-    :root {{
-      --bg-body: hsl(210 33% 99%);
-      --bg-receipt: hsl(0 0% 100%);
-      --text-primary: hsl(240 10% 3.9%);
-      --text-secondary: hsl(240 3.8% 46.1%);
-      --text-muted: hsl(240 3.8% 46.1%);
-      --accent: hsl(200 29% 45%);
-      --accent-cool: hsl(200 29% 45%);
-      --border: hsl(240 5.9% 88%);
-      --border-dashed: hsl(240 5.9% 88%);
-      --card-bg: hsl(240 4.8% 95.9%);
-      --bar-bg: hsl(240 4.8% 95.9%);
-      --bar-fill: hsl(200 29% 45%);
-      --printer-led: hsl(142 50% 40%);
-    }}
+  [data-theme="light"] {{
+    --bg-body: hsl(210 33% 99%);
+    --bg-receipt: hsl(0 0% 100%);
+    --text-primary: hsl(240 10% 3.9%);
+    --text-secondary: hsl(240 3.8% 46.1%);
+    --text-muted: hsl(240 3.8% 46.1%);
+    --accent: hsl(200 29% 45%);
+    --border: hsl(240 5.9% 88%);
+    --border-dashed: hsl(240 5.9% 88%);
+    --card-bg: hsl(240 4.8% 95.9%);
+    --bar-bg: hsl(240 4.8% 95.9%);
+    --bar-fill: hsl(200 29% 45%);
+    --printer-led: hsl(142 50% 40%);
+    --toggle-bg: hsl(240 4.8% 95.9%);
+    --toggle-icon: hsl(240 10% 3.9%);
   }}
 
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -143,9 +116,44 @@ def render_receipt(**data):
     justify-content: center;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.3s ease, color 0.3s ease;
   }}
 
   .receipt-wrapper {{ position: relative; width: 400px; }}
+
+  /* Theme toggle — fixed bottom-right, matches report.joyehuang.me */
+  .theme-toggle {{
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--toggle-bg);
+    color: var(--toggle-icon);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }}
+  .theme-toggle:hover {{
+    border-color: var(--accent);
+    transform: scale(1.08);
+  }}
+  .theme-toggle svg {{
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }}
+  .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon {{ display: none; }}
+  [data-theme="light"] .theme-toggle .sun {{ display: block; }}
 
   .receipt {{
     background: var(--bg-receipt);
@@ -216,7 +224,6 @@ def render_receipt(**data):
   .section:nth-of-type(4) {{ animation-delay: 1.5s; }}
   .section:nth-of-type(5) {{ animation-delay: 1.8s; }}
   .section:nth-of-type(6) {{ animation-delay: 2.1s; }}
-  .section:nth-of-type(7) {{ animation-delay: 2.4s; }}
   .section:last-child {{ border-bottom: none; }}
 
   .section-title {{
@@ -266,15 +273,6 @@ def render_receipt(**data):
   .footer a {{ color: var(--text-secondary); text-decoration: none; }}
   .footer a:hover {{ color: var(--accent); }}
 
-  .waka-main {{ text-align: center; margin: 8px 0; }}
-  .waka-big {{ font-size: 24px; font-weight: 700; color: var(--accent); }}
-  .waka-sublabel {{ font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }}
-  .waka-cats {{ margin-top: 8px; }}
-  .waka-cat {{ display: flex; align-items: center; gap: 6px; font-size: 11px; margin: 3px 0; }}
-  .waka-dot {{ width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }}
-  .waka-name {{ color: var(--text-secondary); flex: 1; }}
-  .waka-val {{ color: var(--text-primary); font-weight: 600; }}
-
   @keyframes fadeIn {{ from {{ opacity: 0; transform: translateY(4px); }} to {{ opacity: 1; transform: translateY(0); }} }}
 
   @media (max-width: 440px) {{ .receipt, .receipt-wrapper {{ width: 100%; }} }}
@@ -282,18 +280,23 @@ def render_receipt(**data):
 </head>
 <body>
 
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+  <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+</button>
+
 <div class="receipt-wrapper">
   <div class="printer-light"></div>
   <div class="receipt">
     <div class="header">
       <div class="logo">HERMES AGENT</div>
-      <div class="subtitle">DAILY RECEIPT</div>
+      <div class="subtitle">HERMES AGENT DAILY RECEIPT</div>
       <div class="date">{display_date}</div>
       <div class="joye">joye @ joyehuang.me</div>
     </div>
 
     <div class="section">
-      <div class="section-title">\u25a0 Overview</div>
+      <div class="section-title">■ Overview</div>
       <div class="big-number">{session_count}</div>
       <div class="big-label">Sessions</div>
       <div class="token-grid">
@@ -312,10 +315,8 @@ def render_receipt(**data):
       </div>
     </div>
 
-{waka_section}
-
     <div class="section">
-      <div class="section-title">\u25a0 Token Usage</div>
+      <div class="section-title">■ Token Usage</div>
       <div class="row">
         <span class="label">Input Tokens</span>
         <span class="value highlight">{input_fmt}</span>
@@ -323,18 +324,6 @@ def render_receipt(**data):
       <div class="row">
         <span class="label">Output Tokens</span>
         <span class="value highlight">{output_fmt}</span>
-      </div>
-      <div class="row">
-        <span class="label">Cache Read</span>
-        <span class="value">{cache_r_fmt}</span>
-      </div>
-      <div class="row">
-        <span class="label">Cache Write</span>
-        <span class="value">{cache_w_fmt}</span>
-      </div>
-      <div class="row">
-        <span class="label">Reasoning (est.)</span>
-        <span class="value">{reason_fmt}</span>
       </div>
       <div class="dash-line"></div>
       <div class="row">
@@ -344,23 +333,23 @@ def render_receipt(**data):
     </div>
 
     <div class="section">
-      <div class="section-title">\u25a0 Models</div>
+      <div class="section-title">■ Models</div>
 {model_rows}    </div>
 
     <div class="section">
-      <div class="section-title">\u25a0 Platforms</div>
+      <div class="section-title">■ Platforms</div>
 {platform_rows}    </div>
 
     <div class="section">
-      <div class="section-title">\u25a0 Sessions</div>
+      <div class="section-title">■ Sessions</div>
 {session_rows}    </div>
 
     <div class="section">
-      <div class="section-title">\u25a0 Top Tools</div>
+      <div class="section-title">■ Top Tools</div>
 {tool_rows}    </div>
 
     <div class="footer">
-      <div>Generated by Hermes Agent \u00b7 {date_str}</div>
+      <div>Generated by Hermes Agent · {date_str}</div>
       <div><a href="https://report.joyehuang.me">report.joyehuang.me</a></div>
     </div>
   </div>
@@ -368,47 +357,15 @@ def render_receipt(**data):
 
 <script>
 (function() {{
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const hum = ctx.createOscillator();
-  hum.type = 'sine';
-  hum.frequency.value = 60;
-  const humGain = ctx.createGain();
-  humGain.gain.setValueAtTime(0, ctx.currentTime);
-  humGain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.3);
-  humGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
-  hum.connect(humGain);
-  humGain.connect(ctx.destination);
-  hum.start(ctx.currentTime);
-  hum.stop(ctx.currentTime + 2.5);
-
-  const clickTimes = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55, 1.7, 1.85, 2.0, 2.15];
-  clickTimes.forEach(t => {{
-    const bufSize = ctx.sampleRate * 0.025;
-    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-    const noise = ctx.createBufferSource();
-    noise.buffer = buf;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.12, ctx.currentTime + t);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.025);
-    noise.connect(g);
-    g.connect(ctx.destination);
-    noise.start(ctx.currentTime + t);
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('theme');
+  if (saved) root.dataset.theme = saved;
+  toggle.addEventListener('click', () => {{
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('theme', next);
   }});
-
-  const tearSize = ctx.sampleRate * 0.12;
-  const tearBuf = ctx.createBuffer(1, tearSize, ctx.sampleRate);
-  const tearData = tearBuf.getChannelData(0);
-  for (let i = 0; i < tearSize; i++) tearData[i] = (Math.random() * 2 - 1) * (1 - i / tearSize);
-  const tear = ctx.createBufferSource();
-  tear.buffer = tearBuf;
-  const tearGain = ctx.createGain();
-  tearGain.gain.setValueAtTime(0.08, ctx.currentTime + 2.3);
-  tearGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2.5);
-  tear.connect(tearGain);
-  tearGain.connect(ctx.destination);
-  tear.start(ctx.currentTime + 2.3);
 }})();
 </script>
 

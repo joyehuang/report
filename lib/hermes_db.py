@@ -11,10 +11,10 @@ MELBOURNE_TZ = timezone(timedelta(hours=10))
 
 
 def get_yesterday_range() -> Tuple[datetime, datetime, datetime]:
-    """Return (start_dt, end_dt, yesterday_dt) in Melbourne time."""
-    now_melb = datetime.now(timezone.utc).astimezone(MELBOURNE_TZ)
-    yesterday = now_melb - timedelta(days=1)
-    start = datetime(yesterday.year, yesterday.month, yesterday.day, 0, 0, 0, tzinfo=MELBOURNE_TZ)
+    """Return (start_dt, end_dt, yesterday_dt) in UTC (matches Dashboard)."""
+    now_utc = datetime.now(timezone.utc)
+    yesterday = now_utc - timedelta(days=1)
+    start = datetime(yesterday.year, yesterday.month, yesterday.day, 0, 0, 0, tzinfo=timezone.utc)
     end = start + timedelta(days=1)
     return start, end, yesterday
 

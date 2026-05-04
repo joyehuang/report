@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate daily receipt HTML from Hermes Agent state.db + WakaTime."""
+"""Generate daily receipt HTML from Hermes Agent state.db."""
 
 import os
 import sys
@@ -7,7 +7,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.hermes_db import get_yesterday_range, fetch_sessions, aggregate_stats
-from lib.wakatime import fetch_summary
 from lib.template import render_receipt
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "archive")
@@ -44,15 +43,8 @@ def generate():
         return None
 
     stats = aggregate_stats(sessions)
-    waka = fetch_summary(date_str)
 
-    total_tokens = (
-        stats["total_input"]
-        + stats["total_output"]
-        + stats["total_cache_read"]
-        + stats["total_cache_write"]
-        + stats["total_reasoning"]
-    )
+    total_tokens = stats["total_input"] + stats["total_output"]
 
     from collections import Counter
 
@@ -72,9 +64,6 @@ def generate():
         total_tokens=total_tokens,
         total_input=stats["total_input"],
         total_output=stats["total_output"],
-        total_cache_read=stats["total_cache_read"],
-        total_cache_write=stats["total_cache_write"],
-        total_reasoning=stats["total_reasoning"],
         session_count=stats["session_count"],
         total_msgs=stats["total_msgs"],
         total_tools=stats["total_tools"],
@@ -82,7 +71,6 @@ def generate():
         sources=sources,
         sessions=sessions,
         top_tools=tool_counter.most_common(5),
-        waka=waka,
         format_tokens=format_tokens,
         format_duration=format_duration,
     )
@@ -92,6 +80,14 @@ def generate():
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Saved: {filepath}")
+
+    # Regenerate index.html
+    try:
+        import generate_index
+        generate_index.generate()
+    except Exception as e:
+        print(f"index.html regeneration skipped: {e}")
+
     return filepath
 
 

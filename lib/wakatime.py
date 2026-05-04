@@ -28,6 +28,9 @@ def fetch_summary(date_str: str) -> Optional[Dict[str, Any]]:
                     "total_text": total.get("text", "0 mins"),
                     "categories": day.get("categories", []),
                     "editors": day.get("editors", []),
+                    "ai_input_tokens": day.get("ai_input_tokens", 0),
+                    "ai_output_tokens": day.get("ai_output_tokens", 0),
+                    "ai_prompts": day.get("ai_prompt_events", 0),
                 }
     except Exception as e:
         print(f"WakaTime error: {e}")

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joye's Daily Receipt — 2026-05-03</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-body: hsl(240 20.54% 5.2%);
+    --bg-receipt: hsl(240 10% 3.9%);
+    --text-primary: hsl(0 0% 98%);
+    --text-secondary: hsl(240 5% 74.9%);
+    --text-muted: hsl(240 5% 50%);
+    --accent: hsl(195 95% 85%);
+    --accent-cool: hsl(195 95% 85%);
+    --border: hsl(240 3.7% 15.9%);
+    --border-dashed: hsl(240 3.7% 15.9%);
+    --card-bg: hsl(240 3.7% 15.9%);
+    --bar-bg: hsl(240 3.7% 15.9%);
+    --bar-fill: hsl(195 95% 85%);
+    --printer-led: hsl(142 60% 65%);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg-body: hsl(210 33% 99%);
+      --bg-receipt: hsl(0 0% 100%);
+      --text-primary: hsl(240 10% 3.9%);
+      --text-secondary: hsl(240 3.8% 46.1%);
+      --text-muted: hsl(240 3.8% 46.1%);
+      --accent: hsl(200 29% 45%);
+      --accent-cool: hsl(200 29% 45%);
+      --border: hsl(240 5.9% 88%);
+      --border-dashed: hsl(240 5.9% 88%);
+      --card-bg: hsl(240 4.8% 95.9%);
+      --bar-bg: hsl(240 4.8% 95.9%);
+      --bar-fill: hsl(200 29% 45%);
+      --printer-led: hsl(142 50% 40%);
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    line-height: 1.5;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .receipt-wrapper { position: relative; width: 400px; }
+
+  .receipt {
+    background: var(--bg-receipt);
+    width: 400px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    animation: printReceipt 2.5s ease-out forwards;
+    transform-origin: top center;
+    clip-path: inset(0 0 100% 0);
+    border-radius: 2px;
+  }
+
+  @keyframes printReceipt {
+    0% { clip-path: inset(0 0 100% 0); }
+    100% { clip-path: inset(0 0 0% 0); }
+  }
+
+  .receipt::before, .receipt::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 10px;
+    background: radial-gradient(circle, transparent 6px, var(--bg-receipt) 6px);
+    background-size: 16px 16px;
+  }
+  .receipt::before { top: -5px; }
+  .receipt::after { bottom: -5px; transform: rotate(180deg); }
+
+  .printer-light {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--printer-led);
+    box-shadow: 0 0 8px var(--printer-led);
+    animation: blink 0.5s ease-in-out 5;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .header {
+    text-align: center;
+    border-bottom: 2px dashed var(--border-dashed);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+    animation-delay: 0.3s;
+  }
+  .header .logo { font-size: 20px; font-weight: 700; letter-spacing: 4px; margin-bottom: 4px; color: var(--text-primary); }
+  .header .subtitle { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
+  .header .date { font-size: 13px; font-weight: 600; margin-top: 8px; color: var(--accent); }
+  .header .joye { font-size: 10px; color: var(--text-muted); margin-top: 4px; letter-spacing: 1px; }
+
+  .section {
+    border-bottom: 1px dashed var(--border-dashed);
+    padding: 12px 0;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+  }
+  .section:nth-of-type(1) { animation-delay: 0.6s; }
+  .section:nth-of-type(2) { animation-delay: 0.9s; }
+  .section:nth-of-type(3) { animation-delay: 1.2s; }
+  .section:nth-of-type(4) { animation-delay: 1.5s; }
+  .section:nth-of-type(5) { animation-delay: 1.8s; }
+  .section:nth-of-type(6) { animation-delay: 2.1s; }
+  .section:nth-of-type(7) { animation-delay: 2.4s; }
+  .section:last-child { border-bottom: none; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+
+  .row { display: flex; justify-content: space-between; font-size: 12px; margin: 3px 0; }
+  .row .label { color: var(--text-secondary); }
+  .row .value { font-weight: 600; color: var(--text-primary); }
+  .row .highlight { font-weight: 700; font-size: 13px; color: var(--accent); }
+
+  .big-number { font-size: 28px; font-weight: 700; text-align: center; margin: 8px 0 4px; color: var(--text-primary); }
+  .big-label { font-size: 10px; text-align: center; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
+
+  .token-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px;
+  }
+  .token-item {
+    text-align: center; padding: 8px 6px;
+    background: var(--card-bg); border-radius: 4px; border: 1px solid var(--border);
+  }
+  .token-item .num { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  .token-item .lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .model-bar { display: flex; align-items: center; margin: 4px 0; font-size: 11px; }
+  .model-name { width: 100px; font-weight: 600; color: var(--text-primary); }
+  .model-bar-fill { flex: 1; height: 14px; background: var(--bar-bg); border-radius: 2px; overflow: hidden; margin: 0 8px; }
+  .model-bar-inner { height: 100%; background: var(--bar-fill); border-radius: 2px; transition: width 1s ease; }
+  .model-count { width: 60px; text-align: right; font-size: 10px; color: var(--text-muted); }
+
+  .session-item { margin: 4px 0; font-size: 11px; }
+  .session-main { display: flex; justify-content: space-between; }
+  .session-time { font-weight: 600; color: var(--text-primary); }
+  .session-source { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+  .session-title { color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .tool-name { font-weight: 600; color: var(--text-primary); }
+  .tool-count { color: var(--text-muted); font-size: 11px; }
+
+  .dash-line { border-top: 1px dashed var(--border-dashed); margin: 6px 0; }
+
+  .footer {
+    text-align: center; margin-top: 16px; padding-top: 12px;
+    border-top: 2px dashed var(--border-dashed); font-size: 10px; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); text-decoration: none; }
+  .footer a:hover { color: var(--accent); }
+
+  /* WakaTime */
+  .waka-main { text-align: center; margin: 8px 0; }
+  .waka-big { font-size: 24px; font-weight: 700; color: var(--accent); }
+  .waka-sublabel { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .waka-cats { margin-top: 8px; }
+  .waka-cat { display: flex; align-items: center; gap: 6px; font-size: 11px; margin: 3px 0; }
+  .waka-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .waka-name { color: var(--text-secondary); flex: 1; }
+  .waka-val { color: var(--text-primary); font-weight: 600; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 440px) { .receipt, .receipt-wrapper { width: 100%; } }
+</style>
+</head>
+<body>
+
+<div class="receipt-wrapper">
+  <div class="printer-light"></div>
+  <div class="receipt">
+    <div class="header">
+      <div class="logo">HERMES AGENT</div>
+      <div class="subtitle">DAILY RECEIPT</div>
+      <div class="date">May 3, 2026</div>
+      <div class="joye">joye @ joyehuang.me</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">■ Overview</div>
+      <div class="big-number">11</div>
+      <div class="big-label">Sessions</div>
+      <div class="token-grid">
+        <div class="token-item">
+          <div class="num">508</div>
+          <div class="lbl">Messages</div>
+        </div>
+        <div class="token-item">
+          <div class="num">271</div>
+          <div class="lbl">Tool Calls</div>
+        </div>
+        <div class="token-item">
+          <div class="num">11.9M</div>
+          <div class="lbl">Total Tokens</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">■ Coding Activity</div>
+      <div class="waka-main">
+        <div class="waka-big">5 hrs 16 mins</div>
+        <div class="waka-sublabel">Total Time</div>
+      </div>
+      <div class="waka-cats">
+        <div class="waka-cat">
+          <span class="waka-dot" style="background:hsl(var(--accent))"></span>
+          <span class="waka-name">Coding</span>
+          <span class="waka-val">4 hrs 10 mins</span>
+        </div>
+        <div class="waka-cat">
+          <span class="waka-dot" style="background:hsl(var(--accent))"></span>
+          <span class="waka-name">Debugging</span>
+          <span class="waka-val">34 mins</span>
+        </div>
+        <div class="waka-cat">
+          <span class="waka-dot" style="background:hsl(var(--accent))"></span>
+          <span class="waka-name">AI Coding</span>
+          <span class="waka-val">31 mins</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="section">
+      <div class="section-title">■ Token Usage</div>
+      <div class="row">
+        <span class="label">Input Tokens</span>
+        <span class="value highlight">878.6K</span>
+      </div>
+      <div class="row">
+        <span class="label">Output Tokens</span>
+        <span class="value highlight">102.1K</span>
+      </div>
+      <div class="row">
+        <span class="label">Cache Read</span>
+        <span class="value">10.9M</span>
+      </div>
+      <div class="row">
+        <span class="label">Cache Write</span>
+        <span class="value">0</span>
+      </div>
+      <div class="row">
+        <span class="label">Reasoning (est.)</span>
+        <span class="value">0</span>
+      </div>
+      <div class="dash-line"></div>
+      <div class="row">
+        <span class="label">TOTAL</span>
+        <span class="value highlight">11.9M</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">■ Models</div>
+      <div class="model-bar">
+        <span class="model-name">kimi-k2.6</span>
+        <div class="model-bar-fill"><div class="model-bar-inner" style="width:100%"></div></div>
+        <span class="model-count">8 × 11</span>
+      </div>
+      <div class="model-bar">
+        <span class="model-name">deepseek-v4-pro</span>
+        <div class="model-bar-fill"><div class="model-bar-inner" style="width:12%"></div></div>
+        <span class="model-count">1 × 11</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">■ Platforms</div>
+      <div class="row">
+        <span class="label">TELEGRAM</span>
+        <span class="value">8 sessions / 422 msgs</span>
+      </div>
+      <div class="row">
+        <span class="label">QQBOT</span>
+        <span class="value">2 sessions / 83 msgs</span>
+      </div>
+      <div class="row">
+        <span class="label">FEISHU</span>
+        <span class="value">1 sessions / 3 msgs</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">■ Sessions</div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">9h 15m</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Debugging request timeout issue</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1h 05m</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1m</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1m</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">00:00</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">00:00</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">7h 36m</span>
+          <span class="session-source">qqbot</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">15h 32m</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Verify New 100GB Volume Mount</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">34h 05m</span>
+          <span class="session-source">feishu</span>
+        </div>
+        <div class="session-title">Friendly greeting and welcome</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">17h 37m</span>
+          <span class="session-source">qqbot</span>
+        </div>
+        <div class="session-title">询问模型与供应商</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">4h 17m</span>
+          <span class="session-source">telegram</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">■ Top Tools</div>
+      <div class="row">
+        <span class="tool-name">#1 terminal</span>
+        <span class="tool-count">98 calls</span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#2 read_file</span>
+        <span class="tool-count">16 calls</span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#3 search_files</span>
+        <span class="tool-count">9 calls</span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#4 todo</span>
+        <span class="tool-count">4 calls</span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#5 patch</span>
+        <span class="tool-count">3 calls</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>Generated by Hermes Agent · 2026-05-03</div>
+      <div><a href="https://report.joyehuang.me">report.joyehuang.me</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const hum = ctx.createOscillator();
+  hum.type = 'sine';
+  hum.frequency.value = 60;
+  const humGain = ctx.createGain();
+  humGain.gain.setValueAtTime(0, ctx.currentTime);
+  humGain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.3);
+  humGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+  hum.connect(humGain);
+  humGain.connect(ctx.destination);
+  hum.start(ctx.currentTime);
+  hum.stop(ctx.currentTime + 2.5);
+
+  const clickTimes = [0.5, 0.65, 0.8, 0.95, 1.1, 1.25, 1.4, 1.55, 1.7, 1.85, 2.0, 2.15];
+  clickTimes.forEach(t => {
+    const bufSize = ctx.sampleRate * 0.025;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.12, ctx.currentTime + t);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.025);
+    noise.connect(g);
+    g.connect(ctx.destination);
+    noise.start(ctx.currentTime + t);
+  });
+
+  const tearSize = ctx.sampleRate * 0.12;
+  const tearBuf = ctx.createBuffer(1, tearSize, ctx.sampleRate);
+  const tearData = tearBuf.getChannelData(0);
+  for (let i = 0; i < tearSize; i++) tearData[i] = (Math.random() * 2 - 1) * (1 - i / tearSize);
+  const tear = ctx.createBufferSource();
+  tear.buffer = tearBuf;
+  const tearGain = ctx.createGain();
+  tearGain.gain.setValueAtTime(0.08, ctx.currentTime + 2.3);
+  tearGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 2.5);
+  tear.connect(tearGain);
+  tearGain.connect(ctx.destination);
+  tear.start(ctx.currentTime + 2.3);
+})();
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Usage Overview — joyehuang.me</title>
+<title>Cache Analysis — joyehuang.me</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -16,6 +16,7 @@
     --text-muted: hsl(240 3.8% 60%);
     --accent: hsl(200 29% 45%);
     --accent-soft: hsl(200 70% 90%);
+    --green: hsl(142 60% 45%);
     --toggle-bg: hsl(240 4.8% 95.9%);
     --toggle-icon: hsl(240 10% 3.9%);
   }
@@ -28,6 +29,7 @@
     --text-muted: hsl(240 5% 50%);
     --accent: hsl(195 95% 85%);
     --accent-soft: hsl(195 70% 20%);
+    --green: hsl(142 60% 65%);
     --toggle-bg: hsl(240 3.7% 15.9%);
     --toggle-icon: hsl(0 0% 98%);
   }
@@ -40,7 +42,7 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
-  .page { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
 
   .top-bar {
     display: flex; justify-content: space-between; align-items: center;
@@ -74,29 +76,36 @@
     font-size: 13px; color: var(--text-dim); margin-top: 8px;
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px; margin-bottom: 24px;
-  }
-  .stat-card {
+  .hero {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 24px 16px; text-align: center;
-    transition: all 0.2s ease;
+    border-radius: 12px; padding: 40px 24px; text-align: center; margin-bottom: 24px;
   }
-  .stat-card:hover {
-    border-color: var(--accent); transform: translateY(-2px);
+  .hero .big {
+    font-family: 'JetBrains Mono', monospace; font-size: 56px;
+    font-weight: 700; color: var(--green);
   }
-  .stat-card .num {
-    font-family: 'JetBrains Mono', monospace; font-size: 28px;
+  .hero .lbl {
+    font-size: 13px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;
+  }
+  .hero .sub {
+    font-size: 12px; color: var(--text-muted); margin-top: 8px;
+  }
+
+  .grid-3 {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;
+  }
+  .mini-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; text-align: center;
+  }
+  .mini-card .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 22px;
     font-weight: 700; color: var(--text);
   }
-  .stat-card .lbl {
+  .mini-card .lbl {
     font-size: 11px; color: var(--text-dim);
-    text-transform: uppercase; letter-spacing: 1px; margin-top: 6px;
-  }
-  .stat-card .sub {
-    font-size: 10px; color: var(--text-muted); margin-top: 4px;
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
   }
 
   .section {
@@ -113,7 +122,7 @@
     padding: 8px 0; font-size: 13px;
   }
   .bar-label {
-    width: 120px; font-weight: 500; color: var(--text);
+    width: 160px; font-weight: 500; color: var(--text);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .bar-track {
@@ -121,28 +130,43 @@
     border-radius: 5px; overflow: hidden;
   }
   .bar-fill {
-    height: 100%; background: var(--accent);
+    height: 100%; background: var(--green);
     border-radius: 5px; transition: width 0.8s ease;
   }
   .bar-value {
-    width: 70px; text-align: right;
+    width: 60px; text-align: right;
     font-family: 'JetBrains Mono', monospace; font-size: 12px;
     color: var(--text-dim);
   }
 
-  .cost-table {
+  .data-table {
     width: 100%; border-collapse: collapse; font-size: 13px;
   }
-  .cost-table th, .cost-table td {
+  .data-table th, .data-table td {
     text-align: left; padding: 10px 12px;
     border-bottom: 1px solid var(--border);
   }
-  .cost-table th {
+  .data-table th {
     font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
     color: var(--text-dim); font-weight: 600;
   }
-  .cost-table td { color: var(--text); }
-  .cost-table tr:hover td { background: var(--accent-soft); }
+  .data-table td { color: var(--text); }
+  .data-table tr:hover td { background: var(--accent-soft); }
+  .data-table code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: var(--border); padding: 2px 6px; border-radius: 4px;
+  }
+  .ratio {
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+    color: var(--green);
+  }
+
+  .insight {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 16px;
+    font-size: 13px; color: var(--text-dim); line-height: 1.8;
+  }
+  .insight strong { color: var(--text); }
 
   .footer {
     margin-top: 40px; padding-top: 20px;
@@ -157,8 +181,11 @@
   @media (max-width: 640px) {
     .page { padding: 24px 16px; }
     .header h1 { font-size: 28px; }
-    .stats-grid { grid-template-columns: 1fr; }
-    .bar-label { width: 80px; }
+    .hero .big { font-size: 40px; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .bar-label { width: 100px; }
+    .data-table { font-size: 11px; }
+    .data-table th, .data-table td { padding: 8px 6px; }
   }
 </style>
 </head>
@@ -174,100 +201,88 @@
   </div>
 
   <div class="header">
-    <h1>AI <span>Overview</span></h1>
-    <p class="meta">Cumulative stats · 7 days recorded · 2026-04-28 ~ 2026-05-04</p>
+    <h1>Cache <span>Analysis</span></h1>
+    <p class="meta">Hermes Agent prompt caching stats by model</p>
   </div>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="num">202.0M</div>
-      <div class="lbl">Total Tokens</div>
-      <div class="sub">Hermes 3.4M + WakaTime 198.6M</div>
+  <div class="hero">
+    <div class="big">94.6%</div>
+    <div class="lbl">Overall Cache Hit Ratio</div>
+    <div class="sub">52.8M cached / 55.8M total prompt tokens</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="mini-card">
+      <div class="num">52.8M</div>
+      <div class="lbl">Cache Read</div>
     </div>
-    <div class="stat-card">
-      <div class="num">$280.58</div>
-      <div class="lbl">Total Cost</div>
-      <div class="sub">USD spent on AI</div>
+    <div class="mini-card">
+      <div class="num">0</div>
+      <div class="lbl">Cache Write</div>
     </div>
-    <div class="stat-card">
-      <div class="num">41h 22m</div>
-      <div class="lbl">Coding Time</div>
-      <div class="sub">Total coding hours</div>
+    <div class="mini-card">
+      <div class="num">3.0M</div>
+      <div class="lbl">Fresh Input</div>
     </div>
+  </div>
+
+  <div class="insight">
+    <strong>关于 Cache Hit Ratio</strong><br>
+    Prompt caching 是通过重用之前的 prompt 上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多的上下文被重用，hit ratio 越高，成本越低。<br>
+    Anthropic Claude 和 Kimi 都支持 prompt caching，但各模型的缓存策略和命中率可能不同。
   </div>
 
   <div class="section">
-    <div class="section-title">Cost by Provider</div>
+    <div class="section-title">Cache Hit Ratio by Model</div>
       <div class="bar-row">
-        <span class="bar-label">Anthropic</span>
+        <span class="bar-label"><code>kimi-k2.6</code></span>
         <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
-        <span class="bar-value">$165.33</span>
+        <span class="bar-value">94.7%</span>
       </div>
       <div class="bar-row">
-        <span class="bar-label">Kimi</span>
-        <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
-        <span class="bar-value">$41.40</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Openai</span>
-        <div class="bar-track"><div class="bar-fill" style="width:24%"></div></div>
-        <span class="bar-value">$39.20</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Deepseek</span>
-        <div class="bar-track"><div class="bar-fill" style="width:8%"></div></div>
-        <span class="bar-value">$13.80</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Openrouter</span>
-        <div class="bar-track"><div class="bar-fill" style="width:7%"></div></div>
-        <span class="bar-value">$10.85</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Grok</span>
-        <div class="bar-track"><div class="bar-fill" style="width:6%"></div></div>
-        <span class="bar-value">$10.00</span>
+        <span class="bar-label"><code>deepseek-v4-pro</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:96%"></div></div>
+        <span class="bar-value">91.3%</span>
       </div>
 
   </div>
 
   <div class="section">
-    <div class="section-title">Monthly Cost</div>
-    <table class="cost-table">
+    <div class="section-title">Model Breakdown</div>
+    <table class="data-table">
       <thead>
-        <tr><th>Month</th><th>Cost</th></tr>
+        <tr>
+          <th>Model</th>
+          <th>Sessions</th>
+          <th>Input</th>
+          <th>Cache Read</th>
+          <th>Cache Write</th>
+          <th>Output</th>
+          <th>Hit Ratio</th>
+        </tr>
       </thead>
       <tbody>
       <tr>
-        <td>2026-05</td>
-        <td>$41.40</td>
+        <td><code>kimi-k2.6</code></td>
+        <td>19</td>
+        <td>2.9M</td>
+        <td>52.2M</td>
+        <td>0</td>
+        <td>422.6K</td>
+        <td><span class="ratio">94.7%</span></td>
       </tr>
       <tr>
-        <td>2026-04</td>
-        <td>$239.18</td>
+        <td><code>deepseek-v4-pro</code></td>
+        <td>1</td>
+        <td>51.4K</td>
+        <td>537.5K</td>
+        <td>0</td>
+        <td>6.0K</td>
+        <td><span class="ratio">91.3%</span></td>
       </tr>
+
       </tbody>
     </table>
-  </div>
-  <div class="section">
-    <div class="section-title">Hermes Agent Cache</div>
-    <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0;">
-      <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">52.8M</div>
-        <div class="lbl">Cache Read</div>
-      </div>
-      <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">0</div>
-        <div class="lbl">Cache Write</div>
-      </div>
-      <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">94.6%</div>
-        <div class="lbl">Hit Ratio</div>
-      </div>
-    </div>
-    <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">
-      <a href="cache-analysis.html" style="color: var(--accent); text-decoration: none;">→ View model-level cache analysis</a>
-    </p>
   </div>
 
   <div class="footer">

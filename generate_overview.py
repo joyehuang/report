@@ -33,7 +33,10 @@ def generate():
     # Hermes Agent all-time stats (Dashboard 口径: input + output only)
     hermes = aggregate_all_time()
     hermes_tokens = hermes.get("total_input", 0) + hermes.get("total_output", 0)
-    hermes_cache = hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0)
+    hermes_cache_read = hermes.get("total_cache_read", 0)
+    hermes_cache_write = hermes.get("total_cache_write", 0)
+    total_prompt = hermes.get("total_input", 0) + hermes_cache_read
+    cache_hit_ratio = (hermes_cache_read / total_prompt * 100) if total_prompt > 0 else 0
 
     # WakaTime cumulative stats
     waka = get_cumulative()
@@ -286,6 +289,29 @@ def generate():
       <tbody>
 {month_rows}      </tbody>
     </table>
+  </div>
+"""
+
+    # Cache stats section
+    html += f"""  <div class="section">
+    <div class="section-title">Hermes Agent Cache</div>
+    <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0;">
+      <div class="stat-card" style="border: none; padding: 16px;">
+        <div class="num">{fmt_tokens(hermes_cache_read)}</div>
+        <div class="lbl">Cache Read</div>
+      </div>
+      <div class="stat-card" style="border: none; padding: 16px;">
+        <div class="num">{fmt_tokens(hermes_cache_write)}</div>
+        <div class="lbl">Cache Write</div>
+      </div>
+      <div class="stat-card" style="border: none; padding: 16px;">
+        <div class="num">{cache_hit_ratio:.1f}%</div>
+        <div class="lbl">Hit Ratio</div>
+      </div>
+    </div>
+    <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">
+      <a href="cache-analysis.html" style="color: var(--accent); text-decoration: none;">→ View model-level cache analysis</a>
+    </p>
   </div>
 """
 

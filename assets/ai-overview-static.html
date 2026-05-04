@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Overview</title>
+  <style>
+    :root {
+      --bg: hsl(240 20.54% 5.2%);
+      --card: hsl(240 10% 3.9%);
+      --border: hsl(240 3.7% 15.9%);
+      --text: hsl(0 0% 98%);
+      --text-dim: hsl(240 5% 74.9%);
+      --text-muted: hsl(240 5% 50%);
+      --accent: hsl(195 95% 85%);
+      --accent-soft: hsl(195 70% 20%);
+      --green: hsl(142 60% 65%);
+      --shadow: 0 24px 80px hsl(0 0% 0% / 0.34);
+      --radius: 8px;
+      color-scheme: dark;
+    }
+
+    [data-theme="light"] {
+      --bg: hsl(210 33% 99%);
+      --card: hsl(0 0% 100%);
+      --border: hsl(240 5.9% 88%);
+      --text: hsl(240 10% 3.9%);
+      --text-dim: hsl(240 3.8% 46.1%);
+      --text-muted: hsl(240 3.8% 60%);
+      --accent: hsl(200 29% 45%);
+      --accent-soft: hsl(200 70% 90%);
+      --green: hsl(142 50% 40%);
+      --shadow: 0 24px 70px hsl(220 35% 45% / 0.12);
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .activity {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .activity::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 18px var(--accent);
+      content: "";
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .segmented,
+    .date-pill,
+    .theme-toggle {
+      border: 1px solid var(--border);
+      background: hsl(0 0% 100% / 0.02);
+      color: var(--text-dim);
+      box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.04);
+    }
+
+    [data-theme="light"] .segmented,
+    [data-theme="light"] .date-pill,
+    [data-theme="light"] .theme-toggle {
+      background: hsl(0 0% 100% / 0.7);
+      box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.8);
+    }
+
+    .segmented {
+      display: inline-flex;
+      gap: 4px;
+      height: 38px;
+      padding: 4px;
+      border-radius: 999px;
+    }
+
+    .segmented button {
+      min-width: 78px;
+      height: 28px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: default;
+    }
+
+    .segmented .active {
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+
+    [data-theme="light"] .segmented .active {
+      color: hsl(200 35% 24%);
+    }
+
+    .date-pill,
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      border-radius: 999px;
+    }
+
+    .date-pill {
+      gap: 9px;
+      padding: 0 15px;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .theme-toggle {
+      width: 38px;
+      padding: 0;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .theme-toggle .sun,
+    [data-theme="light"] .theme-toggle .moon {
+      display: none;
+    }
+
+    [data-theme="light"] .theme-toggle .sun {
+      display: block;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .overview-card {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.95fr) minmax(260px, 1.05fr);
+      gap: 28px;
+      padding: clamp(22px, 4vw, 34px);
+    }
+
+    .donut-wrap {
+      display: grid;
+      place-items: center;
+      min-height: 284px;
+    }
+
+    .donut {
+      width: min(260px, 100%);
+      height: auto;
+      overflow: visible;
+    }
+
+    .donut-track {
+      stroke: var(--border);
+      opacity: 0.9;
+    }
+
+    .donut-value {
+      stroke: var(--accent);
+      stroke-dasharray: 0 100;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 12px hsl(195 95% 72% / 0.22));
+      animation: draw-donut 1200ms cubic-bezier(0.22, 1, 0.36, 1) 180ms forwards;
+    }
+
+    .donut-percent {
+      fill: var(--text);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .donut-label {
+      fill: var(--text-muted);
+      font-size: 7px;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    @keyframes draw-donut {
+      to {
+        stroke-dasharray: 100 100;
+      }
+    }
+
+    .detail-panel {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .legend {
+      display: grid;
+      gap: 14px;
+    }
+
+    .legend-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .dot-muted {
+      background: var(--border);
+    }
+
+    .legend-label {
+      min-width: 0;
+    }
+
+    .legend-value {
+      color: var(--text);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .legend-percent {
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bars {
+      display: grid;
+      gap: 16px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: hsl(240 3.7% 15.9% / 0.58);
+    }
+
+    [data-theme="light"] .track {
+      background: hsl(240 5.9% 88% / 0.72);
+    }
+
+    .fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      animation: fill-bar 1000ms cubic-bezier(0.22, 1, 0.36, 1) 340ms forwards;
+    }
+
+    .fill.zero {
+      background: var(--border);
+      animation-name: fill-zero;
+    }
+
+    @keyframes fill-bar {
+      to {
+        width: var(--target);
+      }
+    }
+
+    @keyframes fill-zero {
+      to {
+        width: 0;
+      }
+    }
+
+    .line-stat {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .line-stat strong {
+      color: var(--text);
+      font-weight: 750;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .metric-card {
+      min-width: 0;
+      padding: 22px;
+    }
+
+    .metric-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-dim);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .metric-icon {
+      display: inline-grid;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    [data-theme="light"] .metric-icon {
+      color: hsl(200 35% 28%);
+    }
+
+    .metric-icon.green {
+      background: hsl(142 45% 20% / 0.75);
+      color: var(--green);
+    }
+
+    [data-theme="light"] .metric-icon.green {
+      background: hsl(142 50% 88%);
+    }
+
+    .metric-value {
+      margin: 28px 0 10px;
+      font-size: clamp(38px, 5vw, 52px);
+      font-weight: 820;
+      line-height: 0.95;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-sub {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--text-dim);
+      background: hsl(0 0% 100% / 0.02);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    [data-theme="light"] .pill {
+      background: hsl(210 33% 99%);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100% - 24px, 680px);
+        padding: 24px 0;
+      }
+
+      .topbar,
+      .actions {
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      .topbar {
+        flex-direction: column;
+      }
+
+      .overview-card,
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .donut-wrap {
+        min-height: 224px;
+      }
+
+      .donut {
+        width: min(220px, 78vw);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .page {
+        width: min(100% - 20px, 420px);
+      }
+
+      .actions {
+        width: 100%;
+      }
+
+      .segmented,
+      .date-pill {
+        width: 100%;
+      }
+
+      .segmented button {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      .date-pill {
+        justify-content: flex-start;
+        overflow-wrap: anywhere;
+        white-space: normal;
+      }
+
+      .overview-card,
+      .metric-card {
+        padding: 18px;
+      }
+
+      .legend-row {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+      }
+
+      .legend-percent {
+        grid-column: 2 / 4;
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">INTELLIGENCE DASHBOARD</p>
+        <h1>AI Overview</h1>
+        <div class="activity">Personal activity</div>
+      </div>
+
+      <div class="actions" aria-label="Dashboard controls">
+        <div class="segmented" aria-label="Activity scope">
+          <button class="active" type="button" aria-pressed="true">Personal</button>
+          <button type="button" aria-pressed="false">Team</button>
+        </div>
+        <div class="date-pill" aria-label="Date range">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 2v4"></path>
+            <path d="M16 2v4"></path>
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+            <path d="M3 10h18"></path>
+          </svg>
+          <span>Apr 28, 2026 - May 4, 2026</span>
+        </div>
+        <button class="theme-toggle" type="button" aria-label="Toggle light mode" title="Toggle theme">
+          <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.99 12.39A8.99 8.99 0 1 1 11.61 3.01 7 7 0 0 0 20.99 12.39z"></path>
+          </svg>
+          <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="card overview-card" aria-label="AI-driven coding activity">
+      <div class="donut-wrap">
+        <svg class="donut" viewBox="0 0 160 160" role="img" aria-label="100 percent AI-driven">
+          <circle class="donut-track" cx="80" cy="80" r="58" stroke-width="18" fill="none"></circle>
+          <circle class="donut-value" cx="80" cy="80" r="58" stroke-width="18" fill="none" pathLength="100" transform="rotate(-90 80 80)"></circle>
+          <text class="donut-percent" x="80" y="77" text-anchor="middle" dominant-baseline="middle">100%</text>
+          <text class="donut-label" x="80" y="99" text-anchor="middle" dominant-baseline="middle">AI-driven</text>
+        </svg>
+      </div>
+
+      <div class="detail-panel">
+        <div class="legend" aria-label="Additions legend">
+          <div class="legend-row">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="legend-label">AI additions</span>
+            <span class="legend-value">9.3K</span>
+            <span class="legend-percent">100%</span>
+          </div>
+          <div class="legend-row">
+            <span class="dot dot-muted" aria-hidden="true"></span>
+            <span class="legend-label">Human additions</span>
+            <span class="legend-value">0</span>
+            <span class="legend-percent">0%</span>
+          </div>
+        </div>
+
+        <div class="bars" aria-label="AI and human comparison">
+          <div class="bar-row">
+            <div class="bar-head">
+              <span>AI</span>
+              <span>9.3K</span>
+            </div>
+            <div class="track">
+              <div class="fill" style="--target: 100%"></div>
+            </div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-head">
+              <span>Human</span>
+              <span>0</span>
+            </div>
+            <div class="track">
+              <div class="fill zero" style="--target: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="line-stat">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m16 18 6-6-6-6"></path>
+            <path d="m8 6-6 6 6 6"></path>
+          </svg>
+          <span><strong>9.3K</strong> line changes</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="metric-grid" aria-label="Weekly metrics">
+      <article class="card metric-card">
+        <div class="metric-head">
+          <span class="metric-icon" aria-hidden="true">$</span>
+          <span>Cost</span>
+        </div>
+        <div class="metric-value">$0</div>
+        <div class="metric-sub">197 AI prompts</div>
+      </article>
+
+      <article class="card metric-card">
+        <div class="metric-head">
+          <span class="metric-icon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M4 21v-7"></path>
+              <path d="M4 10V3"></path>
+              <path d="M12 21v-9"></path>
+              <path d="M12 8V3"></path>
+              <path d="M20 21v-5"></path>
+              <path d="M20 12V3"></path>
+              <path d="M2 14h4"></path>
+              <path d="M10 8h4"></path>
+              <path d="M18 16h4"></path>
+            </svg>
+          </span>
+          <span>Tokens</span>
+        </div>
+        <div class="metric-value">198.6M</div>
+        <div class="pills">
+          <span class="pill">197.9M in</span>
+          <span class="pill">706.3K out</span>
+        </div>
+      </article>
+
+      <article class="card metric-card">
+        <div class="metric-head">
+          <span class="metric-icon green" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+            </svg>
+          </span>
+          <span>Human follow-up</span>
+        </div>
+        <div class="metric-value">0%</div>
+        <div class="metric-sub">0 edits to AI-touched files</div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const toggle = document.querySelector(".theme-toggle");
+    const storedTheme = localStorage.getItem("ai-overview-theme");
+
+    if (storedTheme === "light" || storedTheme === "dark") {
+      root.dataset.theme = storedTheme;
+    }
+
+    function syncThemeButton() {
+      const isLight = root.dataset.theme === "light";
+      toggle.setAttribute("aria-label", isLight ? "Toggle dark mode" : "Toggle light mode");
+      toggle.title = isLight ? "Toggle dark mode" : "Toggle light mode";
+    }
+
+    syncThemeButton();
+
+    toggle.addEventListener("click", () => {
+      root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
+      localStorage.setItem("ai-overview-theme", root.dataset.theme);
+      syncThemeButton();
+    });
+  </script>
+</body>
+</html>

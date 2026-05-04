@@ -1,86 +1,70 @@
-"""HTML template renderer for the AI Overview dashboard."""
+"""AI Overview Dashboard template — generated from Codex output."""
 
-
-def render_dashboard(**data):
-    date_range = data["date_range"]
-    total_time = data["total_time"]
-    categories = data["categories"]
-    editors = data["editors"]
-    ai_input = data.get("ai_input", 0)
-    ai_output = data.get("ai_output", 0)
-    ai_prompts = data.get("ai_prompts", 0)
-    hermes_input = data["hermes_input"]
-    hermes_output = data["hermes_output"]
-    hermes_cache = data["hermes_cache"]
-    session_count = data["session_count"]
-    total_tokens = hermes_input + hermes_output + hermes_cache
-
-    def fmt_tok(n):
-        if n >= 1_000_000:
-            return f"{n/1_000_000:.1f}M"
-        elif n >= 1_000:
-            return f"{n/1_000:.1f}K"
-        return str(n)
-
-    # Category bars
-    max_cat = max(c["total_seconds"] for c in categories) if categories else 1
-    cat_bars = ""
+def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
+                     line_changes, cost, prompts, tokens_total, tokens_in, tokens_out,
+                     human_followup, coding_time, categories):
+    """
+    categories: list of dicts with 'name', 'text', 'percent'
+    """
+    
+    cat_rows = ""
     for cat in categories:
-        pct = (cat["total_seconds"] / max_cat) * 100
-        cat_bars += f"""      <div class="bar-item">
-        <div class="bar-head">
-          <span>{cat['name']}</span>
-          <span class="bar-value">{cat['text']}</span>
+        cat_rows += f"""        <div class="waka-cat">
+          <span class="waka-dot"></span>
+          <span class="waka-name">{cat['name']}</span>
+          <span class="waka-val">{cat['text']}</span>
         </div>
-        <div class="track"><div class="fill" style="width:{pct:.0f}%"></div></div>
-      </div>
-"""
-
-    # Editor pills
-    editor_pills = ""
-    for ed in editors[:4]:
-        editor_pills += f"""        <span class="pill">{ed['name']} {ed['text']}</span>
 """
 
     return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Overview — {date_range}</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {{
     --bg: hsl(240 20.54% 5.2%);
-    --bg-card: hsl(240 10% 3.9%);
-    --bg-card-hover: hsl(240 3.7% 15.9%);
+    --card: hsl(240 10% 3.9%);
     --border: hsl(240 3.7% 15.9%);
-    --border-hover: hsl(240 3.7% 25%);
     --text: hsl(0 0% 98%);
     --text-dim: hsl(240 5% 74.9%);
     --text-muted: hsl(240 5% 50%);
     --accent: hsl(195 95% 85%);
     --accent-soft: hsl(195 70% 20%);
     --green: hsl(142 60% 65%);
+    --shadow: 0 24px 80px hsl(0 0% 0% / 0.34);
+    --radius: 12px;
+    color-scheme: dark;
   }}
-
+  [data-theme="light"] {{
+    --bg: hsl(210 33% 99%);
+    --card: hsl(0 0% 100%);
+    --border: hsl(240 5.9% 88%);
+    --text: hsl(240 10% 3.9%);
+    --text-dim: hsl(240 3.8% 46.1%);
+    --text-muted: hsl(240 3.8% 60%);
+    --accent: hsl(200 29% 45%);
+    --accent-soft: hsl(200 70% 90%);
+    --green: hsl(142 50% 40%);
+    --shadow: 0 24px 70px hsl(220 35% 45% / 0.12);
+    color-scheme: light;
+  }}
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-
   body {{
-    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
     background: var(--bg);
     color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
     line-height: 1.5;
-    min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }}
-
   .page {{
     max-width: 900px;
     margin: 0 auto;
     padding: 40px 24px;
   }}
-
   .header {{
     display: flex;
     justify-content: space-between;
@@ -89,7 +73,6 @@ def render_dashboard(**data):
     margin-bottom: 32px;
     flex-wrap: wrap;
   }}
-
   .eyebrow {{
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -98,13 +81,11 @@ def render_dashboard(**data):
     text-transform: uppercase;
     margin-bottom: 8px;
   }}
-
   h1 {{
     font-size: 36px;
     font-weight: 700;
     letter-spacing: -0.5px;
   }}
-
   .subtitle {{
     display: inline-flex;
     align-items: center;
@@ -119,29 +100,78 @@ def render_dashboard(**data):
     border-radius: 50%;
     background: var(--accent);
   }}
-
-  .date-pill {{
-    display: inline-flex;
+  .actions {{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+  }}
+  .segmented {{
+    display: inline-flex;
+    gap: 4px;
+    padding: 4px;
     border: 1px solid var(--border);
     border-radius: 999px;
-    padding: 8px 16px;
-    font-size: 13px;
-    color: var(--text-dim);
-    background: var(--bg-card);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    background: hsl(0 0% 100% / 0.02);
   }}
+  .segmented button {{
+    min-width: 78px;
+    height: 28px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 13px;
+    cursor: default;
+  }}
+  .segmented .active {{
+    background: var(--accent-soft);
+    color: var(--text);
+  }}
+  [data-theme="light"] .segmented .active {{ color: hsl(200 35% 24%); }}
+  .date-pill, .theme-toggle {{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: hsl(0 0% 100% / 0.02);
+    color: var(--text-dim);
+  }}
+  .date-pill {{
+    gap: 8px;
+    padding: 0 15px;
+    white-space: nowrap;
+    font-size: 13px;
+  }}
+  .theme-toggle {{
+    width: 38px;
+    padding: 0;
+    color: var(--text);
+    cursor: pointer;
+  }}
+  .icon {{
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }}
+  .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon {{ display: none; }}
+  [data-theme="light"] .theme-toggle .sun {{ display: block; }}
 
   .card {{
-    background: var(--bg-card);
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
     padding: 24px;
     margin-bottom: 16px;
   }}
-
   .card-title {{
     font-size: 13px;
     font-weight: 600;
@@ -151,95 +181,189 @@ def render_dashboard(**data):
     margin-bottom: 16px;
   }}
 
-  .main-grid {{
+  /* Coding time section */
+  .coding-grid {{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+    margin-bottom: 16px;
   }}
-
-  .donut-wrap {{
-    position: relative;
-    width: 180px;
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
-    margin: 0 auto;
-  }}
-  .donut-svg {{
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-  }}
-  .donut-bg, .donut-ring {{
-    fill: none;
-    stroke-width: 18;
-  }}
-  .donut-bg {{ stroke: var(--border); }}
-  .donut-ring {{
-    stroke: var(--accent);
-    stroke-linecap: round;
-    stroke-dasharray: 471;
-    stroke-dashoffset: 0;
-  }}
-  .donut-center {{
-    position: absolute;
-    text-align: center;
-  }}
-  .donut-center strong {{
-    display: block;
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--text);
-  }}
-  .donut-center span {{
-    display: block;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }}
-
-  .big-stat {{
+  .coding-main {{
     text-align: center;
     padding: 20px 0;
   }}
-  .big-stat .num {{
+  .coding-big {{
     font-size: 42px;
     font-weight: 700;
     color: var(--accent);
     font-family: 'JetBrains Mono', monospace;
   }}
-  .big-stat .lbl {{
+  .coding-sublabel {{
     font-size: 11px;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 4px;
   }}
+  .waka-cats {{
+    margin-top: 8px;
+  }}
+  .waka-cat {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin: 6px 0;
+  }}
+  .waka-dot {{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }}
+  .waka-name {{
+    color: var(--text-dim);
+    flex: 1;
+  }}
+  .waka-val {{
+    color: var(--text);
+    font-weight: 600;
+  }}
 
-  .bar-item {{
-    margin: 12px 0;
+  /* Donut */
+  .overview-grid {{
+    display: grid;
+    grid-template-columns: minmax(200px, 0.9fr) minmax(200px, 1.1fr);
+    gap: 28px;
+    align-items: center;
+  }}
+  .donut-wrap {{
+    display: grid;
+    place-items: center;
+  }}
+  .donut {{
+    width: 200px;
+    height: 200px;
+    transform: rotate(-90deg);
+  }}
+  .donut-track {{
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 18;
+  }}
+  .donut-value {{
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 18;
+    stroke-linecap: round;
+    stroke-dasharray: 0 471;
+    animation: drawDonut 1.2s ease forwards;
+  }}
+  @keyframes drawDonut {{
+    to {{ stroke-dasharray: 471 471; }}
+  }}
+  .donut-center {{
+    position: absolute;
+    text-align: center;
+  }}
+  .donut-center strong {{
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+  }}
+  .donut-center span {{
+    font-size: 12px;
+    color: var(--text-muted);
+  }}
+
+  .legend {{
+    display: grid;
+    gap: 14px;
+  }}
+  .legend-row {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--text-dim);
+    font-size: 14px;
+  }}
+  .legend-left {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }}
+  .legend-dot {{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }}
+  .legend-dot.muted {{
+    background: var(--border);
+  }}
+  .legend-value {{
+    color: var(--text);
+    font-weight: 700;
+  }}
+  .legend-percent {{
+    color: var(--text-muted);
+    font-size: 12px;
+  }}
+
+  .bars {{
+    display: grid;
+    gap: 16px;
+    margin-top: 8px;
+  }}
+  .bar-row {{
+    display: grid;
+    gap: 6px;
   }}
   .bar-head {{
     display: flex;
     justify-content: space-between;
     font-size: 13px;
-    margin-bottom: 6px;
-  }}
-  .bar-value {{
-    font-weight: 600;
-    color: var(--text);
+    color: var(--text-dim);
   }}
   .track {{
     height: 10px;
-    background: var(--border);
+    background: hsl(240 3.7% 15.9% / 0.5);
     border-radius: 999px;
     overflow: hidden;
+  }}
+  [data-theme="light"] .track {{
+    background: hsl(240 5.9% 88% / 0.7);
   }}
   .fill {{
     height: 100%;
     background: var(--accent);
     border-radius: 999px;
-    transition: width 1s ease;
+    width: 0;
+    animation: fillBar 1s ease 0.3s forwards;
+  }}
+  .fill.zero {{
+    background: var(--border);
+    width: 0;
+  }}
+  @keyframes fillBar {{
+    to {{ width: var(--target); }}
+  }}
+
+  .line-stat {{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }}
+  .line-stat strong {{
+    color: var(--text);
   }}
 
   .metric-grid {{
@@ -248,50 +372,60 @@ def render_dashboard(**data):
     gap: 16px;
   }}
   .metric-card {{
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
+    padding: 22px;
+  }}
+  .metric-head {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 600;
   }}
   .metric-icon {{
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
     background: var(--accent-soft);
     color: var(--accent);
     display: grid;
     place-items: center;
-    margin-bottom: 12px;
     font-size: 14px;
+    font-weight: 700;
   }}
-  .metric-label {{
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+  [data-theme="light"] .metric-icon {{ color: hsl(200 35% 28%); }}
+  .metric-icon.green {{
+    background: hsl(142 45% 20% / 0.75);
+    color: var(--green);
+  }}
+  [data-theme="light"] .metric-icon.green {{
+    background: hsl(142 50% 88%);
   }}
   .metric-value {{
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 700;
-    margin-top: 4px;
+    margin: 20px 0 8px;
     color: var(--text);
   }}
   .metric-sub {{
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-muted);
   }}
-
+  .pills {{
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }}
   .pill {{
-    display: inline-block;
     padding: 4px 10px;
     border-radius: 999px;
-    background: var(--bg-card-hover);
     border: 1px solid var(--border);
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-dim);
-    margin: 2px;
+    background: hsl(0 0% 100% / 0.02);
   }}
+  [data-theme="light"] .pill {{ background: hsl(210 33% 99%); }}
 
   .footer {{
     text-align: center;
@@ -305,8 +439,8 @@ def render_dashboard(**data):
   .footer a:hover {{ color: var(--accent); }}
 
   @media (max-width: 720px) {{
-    .main-grid {{ grid-template-columns: 1fr; }}
-    .metric-grid {{ grid-template-columns: 1fr; }}
+    .coding-grid, .overview-grid, .metric-grid {{ grid-template-columns: 1fr; }}
+    .page {{ padding: 24px 16px; }}
     h1 {{ font-size: 28px; }}
   }}
 </style>
@@ -321,50 +455,119 @@ def render_dashboard(**data):
       <h1>AI Overview</h1>
       <div class="subtitle"><span class="dot"></span>Personal activity</div>
     </div>
-    <div class="date-pill">{date_range}</div>
+    <div class="actions">
+      <div class="segmented">
+        <button class="active" type="button">Personal</button>
+        <button type="button">Team</button>
+      </div>
+      <div class="date-pill">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+        {date_range}
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode" title="Toggle theme">
+        <svg class="icon moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+      </button>
+    </div>
   </div>
 
-  <div class="main-grid">
+  <div class="coding-grid">
     <div class="card">
       <div class="card-title">Coding Time</div>
-      <div class="big-stat">
-        <div class="num">{total_time}</div>
-        <div class="lbl">Total Time</div>
+      <div class="coding-main">
+        <div class="coding-big">{coding_time}</div>
+        <div class="coding-sublabel">Total Time</div>
       </div>
-      {cat_bars}
+      <div class="waka-cats">
+{cat_rows}      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Editors</div>
-      <div style="margin-top:8px">
-        {editor_pills}
-      </div>
-      <div class="card-title" style="margin-top:24px">AI Prompts (WakaTime)</div>
-      <div class="big-stat" style="padding:12px 0">
-        <div class="num">{ai_prompts}</div>
-        <div class="lbl">Prompt Events</div>
+      <div class="card-title">AI-Driven Work</div>
+      <div class="overview-grid">
+        <div class="donut-wrap">
+          <svg class="donut" viewBox="0 0 160 160">
+            <circle class="donut-track" cx="80" cy="80" r="58"/>
+            <circle class="donut-value" cx="80" cy="80" r="58"/>
+          </svg>
+          <div class="donut-center">
+            <strong>{ai_driven_pct}%</strong><br/>
+            <span>AI-driven</span>
+          </div>
+        </div>
+        <div>
+          <div class="legend">
+            <div class="legend-row">
+              <div class="legend-left">
+                <span class="legend-dot"></span>
+                <span>AI additions</span>
+              </div>
+              <div>
+                <span class="legend-value">{ai_additions}</span>
+                <span class="legend-percent"> 100%</span>
+              </div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-left">
+                <span class="legend-dot muted"></span>
+                <span>Human additions</span>
+              </div>
+              <div>
+                <span class="legend-value">{human_additions}</span>
+                <span class="legend-percent"> 0%</span>
+              </div>
+            </div>
+          </div>
+          <div class="bars">
+            <div class="bar-row">
+              <div class="bar-head"><span>AI</span><span>{ai_additions}</span></div>
+              <div class="track"><div class="fill" style="--target:100%"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head"><span>Human</span><span>{human_additions}</span></div>
+              <div class="track"><div class="fill zero" style="--target:0%"></div></div>
+            </div>
+          </div>
+          <div class="line-stat">
+            <svg class="icon" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
+            <strong>{line_changes}</strong> line changes
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="metric-grid">
-    <div class="metric-card">
-      <div class="metric-icon">💵</div>
-      <div class="metric-label">Hermes Input</div>
-      <div class="metric-value">{fmt_tok(hermes_input)}</div>
-      <div class="metric-sub">AI tokens sent</div>
+    <div class="card metric-card">
+      <div class="metric-head">
+        <span class="metric-icon">$</span>
+        <span>Cost</span>
+      </div>
+      <div class="metric-value">{cost}</div>
+      <div class="metric-sub">{prompts} AI prompts</div>
     </div>
-    <div class="metric-card">
-      <div class="metric-icon">⚙️</div>
-      <div class="metric-label">Hermes Output</div>
-      <div class="metric-value">{fmt_tok(hermes_output)}</div>
-      <div class="metric-sub">AI tokens received</div>
+    <div class="card metric-card">
+      <div class="metric-head">
+        <span class="metric-icon">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>
+        </span>
+        <span>Tokens</span>
+      </div>
+      <div class="metric-value">{tokens_total}</div>
+      <div class="pills">
+        <span class="pill">{tokens_in} in</span>
+        <span class="pill">{tokens_out} out</span>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="metric-icon">✏️</div>
-      <div class="metric-label">Cache Read</div>
-      <div class="metric-value">{fmt_tok(hermes_cache)}</div>
-      <div class="metric-sub">KV cache hits</div>
+    <div class="card metric-card">
+      <div class="metric-head">
+        <span class="metric-icon green">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </span>
+        <span>Human follow-up</span>
+      </div>
+      <div class="metric-value">{human_followup}</div>
+      <div class="metric-sub">0 edits to AI-touched files</div>
     </div>
   </div>
 
@@ -374,6 +577,29 @@ def render_dashboard(**data):
   </div>
 
 </div>
+
+<script>
+(function() {{
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const moon = toggle.querySelector('.moon');
+  const sun = toggle.querySelector('.sun');
+  const saved = localStorage.getItem('ai-theme');
+  if (saved) root.dataset.theme = saved;
+  function update() {{
+    const isDark = root.dataset.theme === 'dark';
+    moon.style.display = isDark ? 'block' : 'none';
+    sun.style.display = isDark ? 'none' : 'block';
+    toggle.setAttribute('aria-label', isDark ? 'Toggle light mode' : 'Toggle dark mode');
+  }}
+  update();
+  toggle.addEventListener('click', () => {{
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('ai-theme', root.dataset.theme);
+    update();
+  }});
+}})();
+</script>
 
 </body>
 </html>"""

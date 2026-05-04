@@ -17,6 +17,12 @@ def fmt_big(n):
     return str(n)
 
 
+def fmt_duration(seconds):
+    h = int(seconds // 3600)
+    m = int((seconds % 3600) // 60)
+    return f"{h}h {m:02d}m"
+
+
 def find_latest_receipt():
     """Find the latest receipt HTML file and extract key metrics."""
     files = [f for f in os.listdir(ARCHIVE_DIR) if f.startswith("joye-receipt-") and f.endswith(".html")]
@@ -138,8 +144,15 @@ def generate():
     try:
         from lib.wakatime_history import get_cumulative
         from lib.cost_tracker import get_summary
+        from lib.hermes_db import aggregate_all_time
         waka = get_cumulative()
         cost = get_summary()
+        hermes = aggregate_all_time()
+        hermes_tokens = (hermes.get("total_input", 0) + hermes.get("total_output", 0) +
+                         hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0) +
+                         hermes.get("total_reasoning", 0))
+        waka_tokens = waka.get("total_ai_in", 0) + waka.get("total_ai_out", 0)
+        grand_tokens = hermes_tokens + waka_tokens
         overview_card = f"""    <a class="featured-card" href="archive/overview.html">
       <div class="date">Cumulative Overview</div>
       <div class="title">AI Usage Overview</div>
@@ -149,12 +162,12 @@ def generate():
           <div class="lbl">Cost</div>
         </div>
         <div class="stat">
-          <div class="num">{waka.get('days_recorded', 0)}d</div>
-          <div class="lbl">Recorded</div>
+          <div class="num">{fmt_big(grand_tokens)}</div>
+          <div class="lbl">Tokens</div>
         </div>
         <div class="stat">
-          <div class="num">{fmt_big(waka.get('total_ai_in', 0) + waka.get('total_ai_out', 0))}</div>
-          <div class="lbl">Tokens</div>
+          <div class="num">{fmt_duration(waka.get('total_seconds', 0))}</div>
+          <div class="lbl">Coding</div>
         </div>
         <div class="stat">
           <div class="num">{fmt_big(waka.get('total_prompts', 0))}</div>

@@ -23,7 +23,7 @@
     {
       "date": "2026-04-07",
       "date_raw": "260407",
-      "provider": "groq",
+      "provider": "grok",
       "cost_original": 10,
       "currency": "USD",
       "cost_usd": 10.0,

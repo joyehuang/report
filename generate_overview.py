@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Generate cumulative AI Usage Overview page."""
+"""Generate simplified cumulative AI Usage Overview page."""
 
 import os
 import sys
-import json
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -30,43 +29,33 @@ def fmt_duration(seconds):
     return f"{h}h {m:02d}m"
 
 
-def fmt_number(n):
-    if n >= 1_000_000:
-        return f"{n/1_000_000:.1f}M"
-    elif n >= 1_000:
-        return f"{n/1_000:.1f}K"
-    return str(n)
-
-
 def generate():
     # Hermes Agent all-time stats
     hermes = aggregate_all_time()
-    total_tokens = (hermes.get("total_input", 0) + hermes.get("total_output", 0) +
-                    hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0) +
-                    hermes.get("total_reasoning", 0))
+    hermes_tokens = (hermes.get("total_input", 0) + hermes.get("total_output", 0) +
+                     hermes.get("total_cache_read", 0) + hermes.get("total_cache_write", 0) +
+                     hermes.get("total_reasoning", 0))
 
     # WakaTime cumulative stats
     waka = get_cumulative()
+    waka_tokens = waka.get("total_ai_in", 0) + waka.get("total_ai_out", 0)
 
-    # Cost stats
-    cost_data = get_summary()
+    # Grand total
+    grand_tokens = hermes_tokens + waka_tokens
+    grand_cost = get_summary()
 
-    # Build stat cards
+    # Build stat cards (only 3 as requested)
     stat_cards = [
-        ("Cost", f"${cost_data['total_usd']:.2f}", "USD spent on AI"),
+        ("Total Tokens", fmt_tokens(grand_tokens), f"Hermes {fmt_tokens(hermes_tokens)} + WakaTime {fmt_tokens(waka_tokens)}"),
+        ("Total Cost", f"${grand_cost['total_usd']:.2f}", "USD spent on AI"),
         ("Coding Time", fmt_duration(waka.get("total_seconds", 0)), "Total coding hours"),
-        ("Tokens", fmt_tokens(total_tokens), "Hermes Agent tokens"),
-        ("Prompts", fmt_number(waka.get("total_prompts", 0)), "AI prompts sent"),
-        ("Messages", fmt_number(hermes.get("total_msgs", 0)), "Hermes Agent messages"),
-        ("Tool Calls", fmt_number(hermes.get("total_tools", 0)), "Hermes Agent tools"),
-        ("Sessions", fmt_number(hermes.get("session_count", 0)), "Hermes Agent sessions"),
     ]
 
     # Provider cost bars
     provider_bars = ""
-    if cost_data.get("by_provider"):
-        max_cost = max(v["cost_usd"] for v in cost_data["by_provider"].values())
-        for provider, data in sorted(cost_data["by_provider"].items(), key=lambda x: -x[1]["cost_usd"]):
+    if grand_cost.get("by_provider"):
+        max_cost = max(v["cost_usd"] for v in grand_cost["by_provider"].values())
+        for provider, data in sorted(grand_cost["by_provider"].items(), key=lambda x: -x[1]["cost_usd"]):
             pct = (data["cost_usd"] / max_cost) * 100
             provider_bars += f"""      <div class="bar-row">
         <span class="bar-label">{provider.title()}</span>
@@ -75,40 +64,13 @@ def generate():
       </div>
 """
 
-    # Model distribution
-    model_bars = ""
-    if hermes.get("models"):
-        max_model = max(hermes["models"].values())
-        for model, count in hermes["models"].most_common(8):
-            pct = (count / max_model) * 100
-            model_bars += f"""      <div class="bar-row">
-        <span class="bar-label">{model}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:{pct:.0f}%"></div></div>
-        <span class="bar-value">{count}</span>
-      </div>
-"""
-
-    # Platform distribution
-    platform_bars = ""
-    if hermes.get("sources"):
-        max_src = max(hermes["sources"].values())
-        for src, count in hermes["sources"].most_common():
-            pct = (count / max_src) * 100
-            platform_bars += f"""      <div class="bar-row">
-        <span class="bar-label">{src.upper()}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:{pct:.0f}%"></div></div>
-        <span class="bar-value">{count}</span>
-      </div>
-"""
-
-    # Monthly cost table
+    # Monthly cost table (only Month + Cost)
     month_rows = ""
-    if cost_data.get("by_month"):
-        for month, data in sorted(cost_data["by_month"].items(), reverse=True):
+    if grand_cost.get("by_month"):
+        for month, data in sorted(grand_cost["by_month"].items(), reverse=True):
             month_rows += f"""      <tr>
         <td>{month}</td>
         <td>${data['cost_usd']:.2f}</td>
-        <td>{', '.join(set(data['entries'][0]['provider'] for e in data['entries']))}</td>
       </tr>
 """
 
@@ -157,7 +119,7 @@ def generate():
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }}
-  .page {{ max-width: 900px; margin: 0 auto; padding: 40px 24px; }}
+  .page {{ max-width: 720px; margin: 0 auto; padding: 40px 24px; }}
 
   .top-bar {{
     display: flex; justify-content: space-between; align-items: center;
@@ -193,27 +155,27 @@ def generate():
 
   .stats-grid {{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px; margin-bottom: 32px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px; margin-bottom: 24px;
   }}
   .stat-card {{
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 20px 16px; text-align: center;
+    border-radius: 10px; padding: 24px 16px; text-align: center;
     transition: all 0.2s ease;
   }}
   .stat-card:hover {{
     border-color: var(--accent); transform: translateY(-2px);
   }}
   .stat-card .num {{
-    font-family: 'JetBrains Mono', monospace; font-size: 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 28px;
     font-weight: 700; color: var(--text);
   }}
   .stat-card .lbl {{
     font-size: 11px; color: var(--text-dim);
-    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 6px;
   }}
   .stat-card .sub {{
-    font-size: 11px; color: var(--text-muted); margin-top: 2px;
+    font-size: 10px; color: var(--text-muted); margin-top: 4px;
   }}
 
   .section {{
@@ -274,7 +236,7 @@ def generate():
   @media (max-width: 640px) {{
     .page {{ padding: 24px 16px; }}
     .header h1 {{ font-size: 28px; }}
-    .stats-grid {{ grid-template-columns: repeat(2, 1fr); }}
+    .stats-grid {{ grid-template-columns: 1fr; }}
     .bar-label {{ width: 80px; }}
   }}
 </style>
@@ -313,16 +275,6 @@ def generate():
 {provider_bars or '    <p style="color:var(--text-muted);font-size:13px;">No cost data yet.</p>'}
   </div>
 
-  <div class="section">
-    <div class="section-title">Model Distribution</div>
-{model_bars or '    <p style="color:var(--text-muted);font-size:13px;">No model data.</p>'}
-  </div>
-
-  <div class="section">
-    <div class="section-title">Platform Distribution</div>
-{platform_bars or '    <p style="color:var(--text-muted);font-size:13px;">No platform data.</p>'}
-  </div>
-
 """
 
     if month_rows:
@@ -330,7 +282,7 @@ def generate():
     <div class="section-title">Monthly Cost</div>
     <table class="cost-table">
       <thead>
-        <tr><th>Month</th><th>Cost</th><th>Providers</th></tr>
+        <tr><th>Month</th><th>Cost</th></tr>
       </thead>
       <tbody>
 {month_rows}      </tbody>

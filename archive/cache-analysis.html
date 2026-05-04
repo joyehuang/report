@@ -208,12 +208,12 @@
   <div class="hero">
     <div class="big">94.6%</div>
     <div class="lbl">Overall Cache Hit Ratio</div>
-    <div class="sub">52.8M cached / 55.8M total prompt tokens</div>
+    <div class="sub">53.2M cached / 56.2M total prompt tokens</div>
   </div>
 
   <div class="grid-3">
     <div class="mini-card">
-      <div class="num">52.8M</div>
+      <div class="num">53.2M</div>
       <div class="lbl">Cache Read</div>
     </div>
     <div class="mini-card">
@@ -228,8 +228,8 @@
 
   <div class="insight">
     <strong>关于 Cache Hit Ratio</strong><br>
-    Prompt caching 是通过重用之前的 prompt 上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多的上下文被重用，hit ratio 越高，成本越低。<br>
-    Anthropic Claude 和 Kimi 都支持 prompt caching，但各模型的缓存策略和命中率可能不同。
+    Prompt caching 通过重用已有上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多上下文被重用，hit ratio 越高，成本越低。<br>
+    目前数据主要来自 Kimi API，其 OpenAI 兼容接口仅返回 <code>cached_tokens</code> 而不含 <code>cache_write_tokens</code>，因此 Cache Write 显示为 0。若使用 Anthropic API，则会同时记录 <code>cache_creation_input_tokens</code>。
   </div>
 
   <div class="section">
@@ -264,11 +264,11 @@
       <tbody>
       <tr>
         <td><code>kimi-k2.6</code></td>
-        <td>19</td>
-        <td>2.9M</td>
-        <td>52.2M</td>
+        <td>20</td>
+        <td>3.0M</td>
+        <td>52.7M</td>
         <td>0</td>
-        <td>422.6K</td>
+        <td>425.9K</td>
         <td><span class="ratio">94.7%</span></td>
       </tr>
       <tr>

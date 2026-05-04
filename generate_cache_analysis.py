@@ -338,8 +338,8 @@ def generate():
 
   <div class="insight">
     <strong>关于 Cache Hit Ratio</strong><br>
-    Prompt caching 是通过重用之前的 prompt 上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多的上下文被重用，hit ratio 越高，成本越低。<br>
-    Anthropic Claude 和 Kimi 都支持 prompt caching，但各模型的缓存策略和命中率可能不同。
+    Prompt caching 通过重用已有上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多上下文被重用，hit ratio 越高，成本越低。<br>
+    目前数据主要来自 Kimi API，其 OpenAI 兼容接口仅返回 <code>cached_tokens</code> 而不含 <code>cache_write_tokens</code>，因此 Cache Write 显示为 0。若使用 Anthropic API，则会同时记录 <code>cache_creation_input_tokens</code>。
   </div>
 
   <div class="section">

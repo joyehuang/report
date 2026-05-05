@@ -1,13 +1,123 @@
 {
   "bills": [
     {
+      "date": "2026-01-08",
+      "date_raw": "260108",
+      "provider": "anthropic",
+      "cost_original": 11.0,
+      "currency": "USD",
+      "cost_usd": 11.0,
+      "note": "Claude API - Jan",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-01-08",
+      "date_raw": "260108",
+      "provider": "openai",
+      "cost_original": 20.0,
+      "currency": "USD",
+      "cost_usd": 20.0,
+      "note": "ChatGPT Plus - Jan",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-01-08",
+      "date_raw": "260108",
+      "provider": "anthropic",
+      "cost_original": 11.0,
+      "currency": "USD",
+      "cost_usd": 11.0,
+      "note": "Claude API - Jan 2nd",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-01-08",
+      "date_raw": "260108",
+      "provider": "anthropic",
+      "cost_original": 34.0,
+      "currency": "AUD",
+      "cost_usd": 21.76,
+      "note": "Claude Pro - Jan",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-01-15",
+      "date_raw": "260115",
+      "provider": "anthropic",
+      "cost_original": 27.5,
+      "currency": "USD",
+      "cost_usd": 27.5,
+      "note": "Claude Max - Jan",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-01-24",
+      "date_raw": "260124",
+      "provider": "anthropic",
+      "cost_original": 27.5,
+      "currency": "USD",
+      "cost_usd": 27.5,
+      "note": "Claude Max - Jan",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-02-06",
+      "date_raw": "260206",
+      "provider": "openai",
+      "cost_original": 20.0,
+      "currency": "USD",
+      "cost_usd": 20.0,
+      "note": "ChatGPT Plus - Feb",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-02-19",
+      "date_raw": "260219",
+      "provider": "anthropic",
+      "cost_original": 34.0,
+      "currency": "AUD",
+      "cost_usd": 21.76,
+      "note": "Claude Pro - Feb",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-03-09",
+      "date_raw": "260309",
+      "provider": "anthropic",
+      "cost_original": 11.0,
+      "currency": "USD",
+      "cost_usd": 11.0,
+      "note": "Claude API - Mar",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-03-13",
+      "date_raw": "260313",
+      "provider": "anthropic",
+      "cost_original": 34.0,
+      "currency": "AUD",
+      "cost_usd": 21.76,
+      "note": "Claude Pro - Mar",
+      "added_at": 1777964447
+    },
+    {
+      "date": "2026-03-13",
+      "date_raw": "260313",
+      "provider": "openai",
+      "cost_original": 20.0,
+      "currency": "USD",
+      "cost_usd": 20.0,
+      "note": "ChatGPT Plus - Mar",
+      "added_at": 1777964447
+    },
+    {
       "date": "2026-04-04",
       "date_raw": "260404",
       "provider": "kimi",
       "cost_original": 100,
       "currency": "CNY",
       "cost_usd": 13.8,
-      "note": "Kimi 充值",
+      "note": "Kimi \u5145\u503c",
       "added_at": 1777907119
     },
     {
@@ -17,7 +127,7 @@
       "cost_original": 20,
       "currency": "USD",
       "cost_usd": 20.0,
-      "note": "ChatGPT Plus (另一账户)",
+      "note": "ChatGPT Plus (\u53e6\u4e00\u8d26\u6237)",
       "added_at": 1777907119
     },
     {
@@ -27,7 +137,7 @@
       "cost_original": 10,
       "currency": "USD",
       "cost_usd": 10.0,
-      "note": "Lite 套餐",
+      "note": "Lite \u5957\u9910",
       "added_at": 1777907119
     },
     {
@@ -37,7 +147,7 @@
       "cost_original": 34,
       "currency": "AUD",
       "cost_usd": 21.76,
-      "note": "Claude Pro 订阅",
+      "note": "Claude Pro \u8ba2\u9605",
       "added_at": 1777907119
     },
     {
@@ -67,7 +177,7 @@
       "cost_original": 147.6,
       "currency": "AUD",
       "cost_usd": 94.46,
-      "note": "Claude Max 订阅",
+      "note": "Claude Max \u8ba2\u9605",
       "added_at": 1777907119
     },
     {
@@ -87,7 +197,7 @@
       "cost_original": 100,
       "currency": "CNY",
       "cost_usd": 13.8,
-      "note": "DeepSeek 充值",
+      "note": "DeepSeek \u5145\u503c",
       "added_at": 1777907119
     },
     {
@@ -97,32 +207,25 @@
       "cost_original": 200,
       "currency": "CNY",
       "cost_usd": 27.6,
-      "note": "Kimi 充值",
+      "note": "Kimi \u5145\u503c",
       "added_at": 1777907119
     }
   ],
-  "total_ai_usd": 280.58,
+  "total_ai_usd": 493.86,
   "services": [
     {
-      "service": "vercel",
-      "cost_usd": 59.5,
-      "month": "2026-04",
-      "note": "Pro plan subscription",
-      "added_at": 1777907119
-    },
-    {
-      "service": "typeless",
-      "cost_usd": 60.0,
-      "month": "2026-04",
-      "note": "Monthly subscription",
-      "added_at": 1777907119
+      "service": "cloudflare",
+      "cost_usd": 1.61,
+      "month": "2026-01",
+      "note": "DNS + CDN - Jan",
+      "added_at": 1777964447
     },
     {
       "service": "cloudflare",
-      "cost_usd": 3.42,
-      "month": "2026-04",
-      "note": "DNS + CDN",
-      "added_at": 1777907119
+      "cost_usd": 30.53,
+      "month": "2026-02",
+      "note": "DNS + CDN - Feb",
+      "added_at": 1777964447
     },
     {
       "service": "vercel",
@@ -137,7 +240,28 @@
       "month": "2026-03",
       "note": "Add-on",
       "added_at": 1777907119
+    },
+    {
+      "service": "cloudflare",
+      "cost_usd": 3.42,
+      "month": "2026-04",
+      "note": "DNS + CDN",
+      "added_at": 1777907119
+    },
+    {
+      "service": "typeless",
+      "cost_usd": 60.0,
+      "month": "2026-04",
+      "note": "Monthly subscription",
+      "added_at": 1777907119
+    },
+    {
+      "service": "vercel",
+      "cost_usd": 59.5,
+      "month": "2026-04",
+      "note": "Pro plan subscription",
+      "added_at": 1777907119
     }
   ],
-  "total_services_usd": 143.42
+  "total_services_usd": 175.56
 }

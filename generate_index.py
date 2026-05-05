@@ -275,9 +275,9 @@ def generate():
         sess_cnt = row[0] or 0
         avg_ratio = row[1] or 0
         total_cache = row[2] or 0
-        session_cache_card = f"""    <a class="featured-card" href="archive/session-cache.html">
-      <div class="date">Session-level</div>
-      <div class="title">Session Cache Analysis</div>
+        session_cache_card = f"""    <a class="featured-card" href="archive/cache.html">
+      <div class="date">Prompt Caching</div>
+      <div class="title">Cache Analysis</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">{sess_cnt}</div>
@@ -293,7 +293,7 @@ def generate():
         </div>
         <div class="stat">
           <div class="num">→</div>
-          <div class="lbl">Details</div>
+          <div class="lbl">Model + Session</div>
         </div>
       </div>
     </a>"""

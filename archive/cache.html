@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cache Analysis — joyehuang.me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: hsl(210 33% 99%);
+    --card: hsl(0 0% 100%);
+    --border: hsl(240 5.9% 88%);
+    --text: hsl(240 10% 3.9%);
+    --text-dim: hsl(240 3.8% 46.1%);
+    --text-muted: hsl(240 3.8% 60%);
+    --accent: hsl(200 29% 45%);
+    --accent-soft: hsl(200 70% 90%);
+    --green: hsl(142 60% 40%);
+    --yellow: hsl(38 92% 45%);
+    --red: hsl(0 72% 50%);
+    --toggle-bg: hsl(240 4.8% 95.9%);
+    --toggle-icon: hsl(240 10% 3.9%);
+  }
+  [data-theme="dark"] {
+    --bg: hsl(240 20.54% 5.2%);
+    --card: hsl(240 10% 3.9%);
+    --border: hsl(240 3.7% 15.9%);
+    --text: hsl(0 0% 98%);
+    --text-dim: hsl(240 5% 74.9%);
+    --text-muted: hsl(240 5% 50%);
+    --accent: hsl(195 95% 85%);
+    --accent-soft: hsl(195 70% 20%);
+    --green: hsl(142 60% 65%);
+    --yellow: hsl(48 95% 65%);
+    --red: hsl(0 80% 70%);
+    --toggle-bg: hsl(240 3.7% 15.9%);
+    --toggle-icon: hsl(0 0% 98%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 32px;
+  }
+  .brand {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase;
+  }
+  .brand a { color: inherit; text-decoration: none; }
+  .brand a:hover { color: var(--accent); }
+
+  .theme-toggle {
+    width: 40px; height: 40px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--toggle-bg);
+    color: var(--toggle-icon); cursor: pointer;
+    display: grid; place-items: center; transition: all 0.2s ease;
+  }
+  .theme-toggle:hover { transform: scale(1.05); border-color: var(--accent); }
+  .theme-toggle svg {
+    width: 18px; height: 18px; stroke: currentColor; stroke-width: 2;
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon { display: none; }
+  [data-theme="light"] .theme-toggle .sun { display: block; }
+
+  .header { margin-bottom: 32px; }
+  .header h1 { font-size: 36px; font-weight: 700; letter-spacing: -1px; }
+  .header h1 span { color: var(--accent); }
+  .header .meta {
+    font-size: 13px; color: var(--text-dim); margin-top: 8px;
+  }
+
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;
+  }
+  .hero {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 32px 24px; text-align: center;
+  }
+  .hero .big {
+    font-family: 'JetBrains Mono', monospace; font-size: 48px;
+    font-weight: 700; color: var(--green);
+  }
+  .hero .lbl {
+    font-size: 12px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;
+  }
+  .hero .sub {
+    font-size: 11px; color: var(--text-muted); margin-top: 6px;
+  }
+
+  .grid-3 {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;
+  }
+  .mini-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; text-align: center;
+  }
+  .mini-card .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 22px;
+    font-weight: 700; color: var(--text);
+  }
+  .mini-card .lbl {
+    font-size: 11px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+  }
+
+  .section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 14px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--text-dim); margin-bottom: 16px;
+  }
+
+  .bar-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0; font-size: 13px;
+  }
+  .bar-label {
+    width: 160px; font-weight: 500; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .bar-track {
+    flex: 1; height: 10px; background: var(--border);
+    border-radius: 5px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; background: var(--green);
+    border-radius: 5px; transition: width 0.8s ease;
+  }
+  .bar-value {
+    width: 60px; text-align: right;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+  }
+  .filter-btn {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    padding: 6px 12px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--text-dim); cursor: pointer; transition: all 0.15s ease;
+  }
+  .filter-btn:hover { color: var(--text); border-color: var(--accent); }
+  .filter-btn.active {
+    background: var(--accent-soft); color: var(--text);
+    border-color: var(--accent);
+  }
+
+  .table-wrap { overflow-x: auto; }
+  .data-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .data-table th, .data-table td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  .data-table th {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-dim); font-weight: 600;
+  }
+  .data-table td { color: var(--text); }
+  .data-table tr:hover td { background: var(--accent-soft); }
+  .data-table code {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: var(--border); padding: 2px 6px; border-radius: 4px;
+  }
+  .ratio {
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  }
+  .ratio-good { color: var(--green); }
+  .ratio-mid { color: var(--yellow); }
+  .ratio-bad { color: var(--red); }
+
+  .empty {
+    text-align: center; color: var(--text-muted);
+    font-size: 13px; padding: 24px;
+  }
+
+  .insight {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 16px;
+    font-size: 13px; color: var(--text-dim); line-height: 1.8;
+  }
+  .insight strong { color: var(--text); }
+
+  .footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--border); text-align: center;
+  }
+  .footer a {
+    color: var(--text-dim); text-decoration: none; font-size: 12px;
+    transition: color 0.2s;
+  }
+  .footer a:hover { color: var(--accent); }
+
+  /* ─── Mobile Responsive ─── */
+  @media (max-width: 768px) {
+    .page { padding: 24px 16px; }
+    .header h1 { font-size: 28px; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero .big { font-size: 36px; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .bar-label { width: 100px; }
+
+    /* Session table → card layout on mobile */
+    .data-table#sessionTable thead { display: none; }
+    .data-table#sessionTable,
+    .data-table#sessionTable tbody,
+    .data-table#sessionTable tr,
+    .data-table#sessionTable td {
+      display: block;
+    }
+    .data-table#sessionTable tr {
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table#sessionTable tr:hover td { background: transparent; }
+    .data-table#sessionTable td {
+      padding: 4px 0;
+      white-space: normal;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .data-table#sessionTable td::before {
+      content: attr(data-label);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .data-table#sessionTable td[data-label="Started"] {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    /* Model table stays as table with horizontal scroll */
+    .data-table#modelTable { font-size: 11px; }
+    .data-table#modelTable th,
+    .data-table#modelTable td { padding: 8px 6px; }
+  }
+
+  @media (max-width: 480px) {
+    .page { padding: 16px 12px; }
+    .header h1 { font-size: 24px; }
+    .hero .big { font-size: 30px; }
+    .mini-card .num { font-size: 18px; }
+    .filter-btn { font-size: 11px; padding: 5px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-bar">
+    <div class="brand"><a href="../index.html">← AI Usage Report</a></div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+    </button>
+  </div>
+
+  <div class="header">
+    <h1>Cache <span>Analysis</span></h1>
+    <p class="meta">Hermes Agent prompt caching — model-level overview &amp; per-session breakdown</p>
+  </div>
+
+  <div class="hero-grid">
+    <div class="hero">
+      <div class="big">94.5%</div>
+      <div class="lbl">Overall Cache Hit Ratio</div>
+      <div class="sub">58.1M cached / 61.5M total prompt tokens</div>
+    </div>
+    <div class="hero">
+      <div class="big">74.2%</div>
+      <div class="lbl">Average Session Hit Ratio</div>
+      <div class="sub">26 sessions · overall 94.5%</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="mini-card">
+      <div class="num">58.1M</div>
+      <div class="lbl">Cache Read</div>
+    </div>
+    <div class="mini-card">
+      <div class="num">0</div>
+      <div class="lbl">Cache Write</div>
+    </div>
+    <div class="mini-card">
+      <div class="num">3.4M</div>
+      <div class="lbl">Fresh Input</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>关于 Cache Hit Ratio</strong><br>
+    Prompt caching 通过重用已有上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多上下文被重用，hit ratio 越高，成本越低。<br>
+    目前数据主要来自 Kimi API，其 OpenAI 兼容接口仅返回 <code>cached_tokens</code> 而不含 <code>cache_write_tokens</code>，因此 Cache Write 显示为 0。若使用 Anthropic API，则会同时记录 <code>cache_creation_input_tokens</code>。
+  </div>
+
+  <div class="section">
+    <div class="section-title">Cache Hit Ratio by Model</div>
+      <div class="bar-row">
+        <span class="bar-label"><code>kimi-k2.6</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        <span class="bar-value">94.6%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label"><code>deepseek-v4-pro</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:97%"></div></div>
+        <span class="bar-value">91.3%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label"><code>deepseek-v4-flash</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:99%"></div></div>
+        <span class="bar-value">93.6%</span>
+      </div>
+
+  </div>
+
+  <div class="section">
+    <div class="section-title">Model Breakdown</div>
+    <div class="table-wrap">
+      <table class="data-table" id="modelTable">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Sessions</th>
+            <th>Input</th>
+            <th>Cache Read</th>
+            <th>Cache Write</th>
+            <th>Output</th>
+            <th>Hit Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+      <tr>
+        <td><code>kimi-k2.6</code></td>
+        <td>22</td>
+        <td>3.2M</td>
+        <td>56.6M</td>
+        <td>0</td>
+        <td>443.4K</td>
+        <td><span class="ratio">94.6%</span></td>
+      </tr>
+      <tr>
+        <td><code>deepseek-v4-pro</code></td>
+        <td>1</td>
+        <td>51.4K</td>
+        <td>537.5K</td>
+        <td>0</td>
+        <td>6.0K</td>
+        <td><span class="ratio">91.3%</span></td>
+      </tr>
+      <tr>
+        <td><code>deepseek-v4-flash</code></td>
+        <td>1</td>
+        <td>66.6K</td>
+        <td>975.4K</td>
+        <td>0</td>
+        <td>11.2K</td>
+        <td><span class="ratio">93.6%</span></td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">All Sessions</div>
+    <div class="filter-bar"><button class="filter-btn active" data-model="all">All</button><button class="filter-btn" data-model="deepseek-v4-flash">deepseek-v4-flash</button><button class="filter-btn" data-model="deepseek-v4-pro">deepseek-v4-pro</button><button class="filter-btn" data-model="kimi-k2.6">kimi-k2.6</button><button class="filter-btn" data-model="unknown">unknown</button></div>
+    <div class="table-wrap">
+      <table class="data-table" id="sessionTable">
+        <thead>
+          <tr>
+            <th>Started (Melb)</th>
+            <th>Model</th>
+            <th>Input</th>
+            <th>Cache Read</th>
+            <th>Cache Write</th>
+            <th>Output</th>
+            <th>Hit Ratio</th>
+            <th>Msgs</th>
+          </tr>
+        </thead>
+        <tbody id="sessionsBody">
+      <tr data-model="deepseek-v4-flash" title="20260505_143256_2054542a">
+        <td data-label="Started">2026-05-05 14:32</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">66.6K</td>
+        <td data-label="Cache Read">975.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">11.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">93.6%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_54b5b4eaa3d3_20260505_080005">
+        <td data-label="Started">2026-05-05 08:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">2.0K</td>
+        <td data-label="Cache Read">7.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">78.9%</span></td>
+        <td data-label="Msgs">9</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_54b5b4eaa3d3_20260505_035922">
+        <td data-label="Started">2026-05-05 03:59</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">1.2K</td>
+        <td data-label="Cache Read">3.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">665</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">71.3%</span></td>
+        <td data-label="Msgs">6</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260505_034027_26d911">
+        <td data-label="Started">2026-05-05 03:40</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">311.0K</td>
+        <td data-label="Cache Read">4.4M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">18.8K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">93.4%</span></td>
+        <td data-label="Msgs">165</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_235047_647923">
+        <td data-label="Started">2026-05-04 23:50</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">538.5K</td>
+        <td data-label="Cache Read">9.2M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">53.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">94.5%</span></td>
+        <td data-label="Msgs">280</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_224912_ce93b1">
+        <td data-label="Started">2026-05-04 22:49</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">219.6K</td>
+        <td data-label="Cache Read">5.7M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">31.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">96.3%</span></td>
+        <td data-label="Msgs">123</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_194752_172326">
+        <td data-label="Started">2026-05-04 19:47</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">386.2K</td>
+        <td data-label="Cache Read">5.2M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">49.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">93.0%</span></td>
+        <td data-label="Msgs">155</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_185003_faca61">
+        <td data-label="Started">2026-05-04 18:50</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">227.2K</td>
+        <td data-label="Cache Read">4.8M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">57.5K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">95.5%</span></td>
+        <td data-label="Msgs">177</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="Python security regex code description">
+        <td data-label="Started">2026-05-04 17:59</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">38.7K</td>
+        <td data-label="Cache Read">309.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">6.9K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">88.9%</span></td>
+        <td data-label="Msgs">31</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="Opening greeting and introduction">
+        <td data-label="Started">2026-05-04 10:46</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">9.8K</td>
+        <td data-label="Cache Read">3.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">86</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">28.2%</span></td>
+        <td data-label="Msgs">3</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_064918_79acf7fa">
+        <td data-label="Started">2026-05-04 06:49</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">262.6K</td>
+        <td data-label="Cache Read">11.0M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">70.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">97.7%</span></td>
+        <td data-label="Msgs">312</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_025107_c6200a">
+        <td data-label="Started">2026-05-04 02:51</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">257</td>
+        <td data-label="Cache Read">12.5K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">64</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">98.0%</span></td>
+        <td data-label="Msgs">2</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_025055_93774d">
+        <td data-label="Started">2026-05-04 02:50</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">227.8K</td>
+        <td data-label="Cache Read">2.6M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">31.8K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">92.0%</span></td>
+        <td data-label="Msgs">126</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_021446_87bc28">
+        <td data-label="Started">2026-05-04 02:14</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">3.5K</td>
+        <td data-label="Cache Read">9.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">23</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">72.2%</span></td>
+        <td data-label="Msgs">2</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260504_015017_8543f0">
+        <td data-label="Started">2026-05-04 01:50</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">193.3K</td>
+        <td data-label="Cache Read">3.1M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">26.6K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">94.1%</span></td>
+        <td data-label="Msgs">166</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="Debugging request timeout issue">
+        <td data-label="Started">2026-05-03 21:33</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">192.2K</td>
+        <td data-label="Cache Read">2.1M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">16.8K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">91.7%</span></td>
+        <td data-label="Msgs">149</td>
+      </tr>
+      <tr data-model="deepseek-v4-pro" title="20260503_202828_524a4039">
+        <td data-label="Started">2026-05-03 20:28</td>
+        <td data-label="Model"><code>deepseek-v4-pro</code></td>
+        <td data-label="Input">51.4K</td>
+        <td data-label="Cache Read">537.5K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">6.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">91.3%</span></td>
+        <td data-label="Msgs">33</td>
+      </tr>
+      <tr data-model="unknown" title="20260503_202700_37d8c562">
+        <td data-label="Started">2026-05-03 20:27</td>
+        <td data-label="Model"><code>unknown</code></td>
+        <td data-label="Input">0</td>
+        <td data-label="Cache Read">0</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">0</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">0.0%</span></td>
+        <td data-label="Msgs">0</td>
+      </tr>
+      <tr data-model="unknown" title="20260503_202545_6ac17fa8">
+        <td data-label="Started">2026-05-03 20:25</td>
+        <td data-label="Model"><code>unknown</code></td>
+        <td data-label="Input">0</td>
+        <td data-label="Cache Read">0</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">0</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">0.0%</span></td>
+        <td data-label="Msgs">3</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260503_183229_e53d14">
+        <td data-label="Started">2026-05-03 18:32</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">30.4K</td>
+        <td data-label="Cache Read">407.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">8.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">93.1%</span></td>
+        <td data-label="Msgs">49</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260503_183214_083e87">
+        <td data-label="Started">2026-05-03 18:32</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">0</td>
+        <td data-label="Cache Read">0</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">0</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">0.0%</span></td>
+        <td data-label="Msgs">1</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260503_181342_61a02829">
+        <td data-label="Started">2026-05-03 18:13</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">254.6K</td>
+        <td data-label="Cache Read">4.9M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">35.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">95.1%</span></td>
+        <td data-label="Msgs">78</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="Verify New 100GB Volume Mount">
+        <td data-label="Started">2026-05-03 04:53</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">288.9K</td>
+        <td data-label="Cache Read">2.8M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">30.6K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.7%</span></td>
+        <td data-label="Msgs">167</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="Friendly greeting and welcome">
+        <td data-label="Started">2026-05-03 00:40</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">6.6K</td>
+        <td data-label="Cache Read">6.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">41</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">48.1%</span></td>
+        <td data-label="Msgs">3</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="询问模型与供应商">
+        <td data-label="Started">2026-05-03 00:35</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">9.0K</td>
+        <td data-label="Cache Read">15.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">145</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">63.0%</span></td>
+        <td data-label="Msgs">5</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260503_003525_e4ecfb97">
+        <td data-label="Started">2026-05-03 00:35</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">45.3K</td>
+        <td data-label="Cache Read">97.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">4.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">68.2%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
+        </tbody>
+      </table>
+      <div class="empty" id="emptyMsg" style="display:none">No sessions match this filter.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://joyehuang.me" target="_blank">joyehuang.me</a> ·
+    <a href="https://github.com/joyehuang" target="_blank">GitHub</a> ·
+    <a href="https://github.com/joyehuang/report" target="_blank">Source</a>
+  </div>
+</div>
+
+<script>
+(function() {
+  const html = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('theme');
+  if (saved) html.dataset.theme = saved;
+  toggle.addEventListener('click', () => {
+    const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+    html.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+
+  // Session filter
+  const buttons = document.querySelectorAll('.filter-btn');
+  const rows = document.querySelectorAll('#sessionsBody tr');
+  const emptyMsg = document.getElementById('emptyMsg');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const m = btn.dataset.model;
+      let visible = 0;
+      rows.forEach(r => {
+        const show = m === 'all' || r.dataset.model === m;
+        r.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      emptyMsg.style.display = visible === 0 ? 'block' : 'none';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

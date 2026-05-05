@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Generate session-level cache analysis dashboard at archive/session-cache.html."""
+"""Generate merged Cache Analysis page (model-level + session-level) at archive/cache.html."""
 
 import os
 import sys
-import json
 import sqlite3
 import html as html_lib
 from datetime import datetime, timezone, timedelta
@@ -37,10 +36,40 @@ def ratio_class(r):
     return "ratio-bad"
 
 
-def fetch_sessions():
+def fetch_data():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
+
+    # Model-level aggregation
+    cur.execute("""
+        SELECT
+            model,
+            COUNT(*) as sessions,
+            SUM(input_tokens) as input,
+            SUM(output_tokens) as output,
+            SUM(cache_read_tokens) as cache_read,
+            SUM(cache_write_tokens) as cache_write,
+            SUM(message_count) as msgs,
+            SUM(tool_call_count) as tools
+        FROM sessions
+        WHERE model IS NOT NULL AND model != ''
+        GROUP BY model
+        ORDER BY sessions DESC
+    """)
+    model_rows = cur.fetchall()
+
+    # Overall
+    cur.execute("""
+        SELECT
+            SUM(input_tokens) as input,
+            SUM(cache_read_tokens) as cache_read,
+            SUM(cache_write_tokens) as cache_write
+        FROM sessions
+    """)
+    overall = cur.fetchone()
+
+    # Session-level data
     cur.execute("""
         SELECT id, model, started_at,
                input_tokens, output_tokens,
@@ -49,36 +78,86 @@ def fetch_sessions():
         FROM sessions
         ORDER BY started_at DESC
     """)
-    rows = [dict(r) for r in cur.fetchall()]
+    sessions = [dict(r) for r in cur.fetchall()]
     conn.close()
-    return rows
+
+    return model_rows, overall, sessions
 
 
 def generate():
-    sessions = fetch_sessions()
+    model_rows, overall, sessions = fetch_data()
 
-    # Per-session computed fields
+    total_input = overall['input'] or 0
+    total_cache_read = overall['cache_read'] or 0
+    total_cache_write = overall['cache_write'] or 0
+    total_prompt = total_input + total_cache_read
+    overall_ratio = (total_cache_read / total_prompt * 100) if total_prompt > 0 else 0
+
+    # Per-session hit ratios
     for s in sessions:
         inp = s["input_tokens"] or 0
         cr = s["cache_read_tokens"] or 0
         denom = inp + cr
         s["hit_ratio"] = (cr / denom * 100) if denom > 0 else 0.0
 
-    # Overall stats
     total_sessions = len(sessions)
-    total_cache_read = sum((s["cache_read_tokens"] or 0) for s in sessions)
-    total_cache_write = sum((s["cache_write_tokens"] or 0) for s in sessions)
-    total_input = sum((s["input_tokens"] or 0) for s in sessions)
-    total_prompt = total_input + total_cache_read
-    overall_ratio = (total_cache_read / total_prompt * 100) if total_prompt > 0 else 0.0
+    total_cache_read_s = sum((s["cache_read_tokens"] or 0) for s in sessions)
+    total_cache_write_s = sum((s["cache_write_tokens"] or 0) for s in sessions)
+    total_input_s = sum((s["input_tokens"] or 0) for s in sessions)
+    total_prompt_s = total_input_s + total_cache_read_s
+    overall_ratio_s = (total_cache_read_s / total_prompt_s * 100) if total_prompt_s > 0 else 0
     avg_hit_ratio = (
         sum(s["hit_ratio"] for s in sessions) / total_sessions if total_sessions else 0.0
     )
 
-    # Models for filtering
-    models = sorted({(s["model"] or "unknown") for s in sessions})
+    # --- Model-level sections ---
+    # Build ratio bars
+    max_ratio = 0
+    for row in model_rows:
+        inp = row['input'] or 0
+        cr = row['cache_read'] or 0
+        pt = inp + cr
+        r = (cr / pt * 100) if pt > 0 else 0
+        if r > max_ratio:
+            max_ratio = r
 
-    # Filter buttons
+    ratio_bars = ""
+    for row in model_rows:
+        model = row['model'] or 'unknown'
+        inp = row['input'] or 0
+        cr = row['cache_read'] or 0
+        pt = inp + cr
+        ratio = (cr / pt * 100) if pt > 0 else 0
+        pct = (ratio / max_ratio * 100) if max_ratio > 0 else 0
+        ratio_bars += f"""      <div class="bar-row">
+        <span class="bar-label"><code>{html_lib.escape(model)}</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:{pct:.0f}%"></div></div>
+        <span class="bar-value">{ratio:.1f}%</span>
+      </div>
+"""
+
+    model_rows_html = ""
+    for row in model_rows:
+        model = row['model'] or 'unknown'
+        inp = row['input'] or 0
+        cr = row['cache_read'] or 0
+        cw = row['cache_write'] or 0
+        out = row['output'] or 0
+        pt = inp + cr
+        ratio = (cr / pt * 100) if pt > 0 else 0
+        model_rows_html += f"""      <tr>
+        <td><code>{html_lib.escape(model)}</code></td>
+        <td>{row['sessions']}</td>
+        <td>{fmt_tokens(inp)}</td>
+        <td>{fmt_tokens(cr)}</td>
+        <td>{fmt_tokens(cw)}</td>
+        <td>{fmt_tokens(out)}</td>
+        <td><span class="ratio">{ratio:.1f}%</span></td>
+      </tr>
+"""
+
+    # --- Session-level section ---
+    models = sorted({(s["model"] or "unknown") for s in sessions})
     filter_buttons = '<button class="filter-btn active" data-model="all">All</button>'
     for m in models:
         filter_buttons += (
@@ -86,7 +165,6 @@ def generate():
             f'{html_lib.escape(m)}</button>'
         )
 
-    # Build table rows
     table_rows = ""
     for s in sessions:
         model = s["model"] or "unknown"
@@ -94,14 +172,14 @@ def generate():
         title = s.get("title") or s["id"]
         title_attr = html_lib.escape(str(title))
         table_rows += f"""      <tr data-model="{html_lib.escape(model)}" title="{title_attr}">
-        <td>{fmt_dt(s['started_at'])}</td>
-        <td><code>{html_lib.escape(model)}</code></td>
-        <td>{fmt_tokens(s['input_tokens'])}</td>
-        <td>{fmt_tokens(s['cache_read_tokens'])}</td>
-        <td>{fmt_tokens(s['cache_write_tokens'])}</td>
-        <td>{fmt_tokens(s['output_tokens'])}</td>
-        <td><span class="ratio {rc}">{s['hit_ratio']:.1f}%</span></td>
-        <td>{s['message_count'] or 0}</td>
+        <td data-label="Started">{fmt_dt(s['started_at'])}</td>
+        <td data-label="Model"><code>{html_lib.escape(model)}</code></td>
+        <td data-label="Input">{fmt_tokens(s['input_tokens'])}</td>
+        <td data-label="Cache Read">{fmt_tokens(s['cache_read_tokens'])}</td>
+        <td data-label="Cache Write">{fmt_tokens(s['cache_write_tokens'])}</td>
+        <td data-label="Output">{fmt_tokens(s['output_tokens'])}</td>
+        <td data-label="Hit Ratio"><span class="ratio {rc}">{s['hit_ratio']:.1f}%</span></td>
+        <td data-label="Msgs">{s['message_count'] or 0}</td>
       </tr>
 """
 
@@ -110,7 +188,7 @@ def generate():
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Session Cache Analysis — joyehuang.me</title>
+<title>Cache Analysis — joyehuang.me</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -187,20 +265,23 @@ def generate():
     font-size: 13px; color: var(--text-dim); margin-top: 8px;
   }}
 
+  .hero-grid {{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;
+  }}
   .hero {{
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 40px 24px; text-align: center; margin-bottom: 24px;
+    border-radius: 12px; padding: 32px 24px; text-align: center;
   }}
   .hero .big {{
-    font-family: 'JetBrains Mono', monospace; font-size: 56px;
+    font-family: 'JetBrains Mono', monospace; font-size: 48px;
     font-weight: 700; color: var(--green);
   }}
   .hero .lbl {{
-    font-size: 13px; color: var(--text-dim);
+    font-size: 12px; color: var(--text-dim);
     text-transform: uppercase; letter-spacing: 2px; margin-top: 8px;
   }}
   .hero .sub {{
-    font-size: 12px; color: var(--text-muted); margin-top: 8px;
+    font-size: 11px; color: var(--text-muted); margin-top: 6px;
   }}
 
   .grid-3 {{
@@ -226,6 +307,28 @@ def generate():
   .section-title {{
     font-size: 14px; font-weight: 600; text-transform: uppercase;
     letter-spacing: 2px; color: var(--text-dim); margin-bottom: 16px;
+  }}
+
+  .bar-row {{
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 0; font-size: 13px;
+  }}
+  .bar-label {{
+    width: 160px; font-weight: 500; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }}
+  .bar-track {{
+    flex: 1; height: 10px; background: var(--border);
+    border-radius: 5px; overflow: hidden;
+  }}
+  .bar-fill {{
+    height: 100%; background: var(--green);
+    border-radius: 5px; transition: width 0.8s ease;
+  }}
+  .bar-value {{
+    width: 60px; text-align: right;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--text-dim);
   }}
 
   .filter-bar {{
@@ -273,6 +376,13 @@ def generate():
     font-size: 13px; padding: 24px;
   }}
 
+  .insight {{
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 16px;
+    font-size: 13px; color: var(--text-dim); line-height: 1.8;
+  }}
+  .insight strong {{ color: var(--text); }}
+
   .footer {{
     margin-top: 40px; padding-top: 20px;
     border-top: 1px solid var(--border); text-align: center;
@@ -283,13 +393,61 @@ def generate():
   }}
   .footer a:hover {{ color: var(--accent); }}
 
-  @media (max-width: 640px) {{
+  /* ─── Mobile Responsive ─── */
+  @media (max-width: 768px) {{
     .page {{ padding: 24px 16px; }}
     .header h1 {{ font-size: 28px; }}
-    .hero .big {{ font-size: 40px; }}
+    .hero-grid {{ grid-template-columns: 1fr; }}
+    .hero .big {{ font-size: 36px; }}
     .grid-3 {{ grid-template-columns: 1fr; }}
-    .data-table {{ font-size: 11px; }}
-    .data-table th, .data-table td {{ padding: 8px 6px; }}
+    .bar-label {{ width: 100px; }}
+
+    /* Session table → card layout on mobile */
+    .data-table#sessionTable thead {{ display: none; }}
+    .data-table#sessionTable,
+    .data-table#sessionTable tbody,
+    .data-table#sessionTable tr,
+    .data-table#sessionTable td {{
+      display: block;
+    }}
+    .data-table#sessionTable tr {{
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+    }}
+    .data-table#sessionTable tr:hover td {{ background: transparent; }}
+    .data-table#sessionTable td {{
+      padding: 4px 0;
+      white-space: normal;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .data-table#sessionTable td::before {{
+      content: attr(data-label);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }}
+    .data-table#sessionTable td[data-label="Started"] {{
+      font-weight: 600;
+      font-size: 13px;
+    }}
+
+    /* Model table stays as table with horizontal scroll */
+    .data-table#modelTable {{ font-size: 11px; }}
+    .data-table#modelTable th,
+    .data-table#modelTable td {{ padding: 8px 6px; }}
+  }}
+
+  @media (max-width: 480px) {{
+    .page {{ padding: 16px 12px; }}
+    .header h1 {{ font-size: 24px; }}
+    .hero .big {{ font-size: 30px; }}
+    .mini-card .num {{ font-size: 18px; }}
+    .filter-btn {{ font-size: 11px; padding: 5px 10px; }}
   }}
 </style>
 </head>
@@ -305,36 +463,75 @@ def generate():
   </div>
 
   <div class="header">
-    <h1>Session <span>Cache</span></h1>
-    <p class="meta">Per-session prompt cache hit ratio across all Hermes sessions</p>
+    <h1>Cache <span>Analysis</span></h1>
+    <p class="meta">Hermes Agent prompt caching — model-level overview &amp; per-session breakdown</p>
   </div>
 
-  <div class="hero">
-    <div class="big">{avg_hit_ratio:.1f}%</div>
-    <div class="lbl">Average Session Hit Ratio</div>
-    <div class="sub">overall: {overall_ratio:.1f}% · {fmt_tokens(total_cache_read)} cached / {fmt_tokens(total_prompt)} prompt tokens</div>
+  <div class="hero-grid">
+    <div class="hero">
+      <div class="big">{overall_ratio:.1f}%</div>
+      <div class="lbl">Overall Cache Hit Ratio</div>
+      <div class="sub">{fmt_tokens(total_cache_read)} cached / {fmt_tokens(total_prompt)} total prompt tokens</div>
+    </div>
+    <div class="hero">
+      <div class="big">{avg_hit_ratio:.1f}%</div>
+      <div class="lbl">Average Session Hit Ratio</div>
+      <div class="sub">{total_sessions} sessions · overall {overall_ratio_s:.1f}%</div>
+    </div>
   </div>
 
   <div class="grid-3">
     <div class="mini-card">
-      <div class="num">{total_sessions}</div>
-      <div class="lbl">Total Sessions</div>
-    </div>
-    <div class="mini-card">
       <div class="num">{fmt_tokens(total_cache_read)}</div>
-      <div class="lbl">Total Cache Read</div>
+      <div class="lbl">Cache Read</div>
     </div>
     <div class="mini-card">
       <div class="num">{fmt_tokens(total_cache_write)}</div>
-      <div class="lbl">Total Cache Write</div>
+      <div class="lbl">Cache Write</div>
+    </div>
+    <div class="mini-card">
+      <div class="num">{fmt_tokens(total_input)}</div>
+      <div class="lbl">Fresh Input</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>关于 Cache Hit Ratio</strong><br>
+    Prompt caching 通过重用已有上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多上下文被重用，hit ratio 越高，成本越低。<br>
+    目前数据主要来自 Kimi API，其 OpenAI 兼容接口仅返回 <code>cached_tokens</code> 而不含 <code>cache_write_tokens</code>，因此 Cache Write 显示为 0。若使用 Anthropic API，则会同时记录 <code>cache_creation_input_tokens</code>。
+  </div>
+
+  <div class="section">
+    <div class="section-title">Cache Hit Ratio by Model</div>
+{ratio_bars}
+  </div>
+
+  <div class="section">
+    <div class="section-title">Model Breakdown</div>
+    <div class="table-wrap">
+      <table class="data-table" id="modelTable">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Sessions</th>
+            <th>Input</th>
+            <th>Cache Read</th>
+            <th>Cache Write</th>
+            <th>Output</th>
+            <th>Hit Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+{model_rows_html}        </tbody>
+      </table>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-title">Sessions</div>
+    <div class="section-title">All Sessions</div>
     <div class="filter-bar">{filter_buttons}</div>
     <div class="table-wrap">
-      <table class="data-table" id="sessionsTable">
+      <table class="data-table" id="sessionTable">
         <thead>
           <tr>
             <th>Started (Melb)</th>
@@ -373,6 +570,7 @@ def generate():
     localStorage.setItem('theme', next);
   }});
 
+  // Session filter
   const buttons = document.querySelectorAll('.filter-btn');
   const rows = document.querySelectorAll('#sessionsBody tr');
   const emptyMsg = document.getElementById('emptyMsg');
@@ -397,10 +595,10 @@ def generate():
 </html>"""
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    filepath = os.path.join(OUTPUT_DIR, "session-cache.html")
+    filepath = os.path.join(OUTPUT_DIR, "cache.html")
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"Session cache analysis saved: {filepath}")
+    print(f"Cache analysis saved: {filepath}")
     return filepath
 
 

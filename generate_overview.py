@@ -310,7 +310,7 @@ def generate():
       </div>
     </div>
     <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">
-      <a href="cache-analysis.html" style="color: var(--accent); text-decoration: none;">→ View model-level cache analysis</a>
+      <a href="cache.html" style="color: var(--accent); text-decoration: none;">→ View cache analysis</a>
     </p>
   </div>
 """

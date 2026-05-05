@@ -292,20 +292,20 @@
 
   <div class="hero-grid">
     <div class="hero">
-      <div class="big">95.2%</div>
+      <div class="big">95.3%</div>
       <div class="lbl" data-i18n="cache-overall-label">Overall Cache Hit Ratio</div>
-      <div class="sub">67.2M cached / 70.6M total prompt tokens</div>
+      <div class="sub">70.1M cached / 73.5M total prompt tokens</div>
     </div>
     <div class="hero">
       <div class="big">74.4%</div>
       <div class="lbl" data-i18n="cache-avg-label">Average Session Hit Ratio</div>
-      <div class="sub">26 sessions · overall 95.2%</div>
+      <div class="sub">26 sessions · overall 95.3%</div>
     </div>
   </div>
 
   <div class="grid-3">
     <div class="mini-card">
-      <div class="num">67.2M</div>
+      <div class="num">70.1M</div>
       <div class="lbl" data-i18n="cache-read">Cache Read</div>
     </div>
     <div class="mini-card">
@@ -320,8 +320,8 @@
 
   <div class="insight">
     <strong data-i18n="cache-insight-title">About Cache Hit Ratio</strong><br>
-    <span>Prompt caching reduces token consumption by reusing previously computed context. A higher <strong>cache_read</strong> means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
-    <span>Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns <code>cached_tokens</code> but not <code>cache_write_tokens</code> — hence Cache Write shows as 0. The Anthropic API does report <code>cache_creation_input_tokens</code> separately.</span>
+    <span data-i18n="cache-insight-body-1">Prompt caching reduces token consumption by reusing previously computed context. A higher cache_read means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
+    <span data-i18n="cache-insight-body-2">Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns cached_tokens but not cache_write_tokens — hence Cache Write shows as 0. The Anthropic API does report cache_creation_input_tokens separately.</span>
   </div>
 
   <div class="section">
@@ -339,14 +339,14 @@
       <div class="bar-row">
         <span class="bar-label"><code>deepseek-v4-flash</code></span>
         <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
-        <span class="bar-value">98.8%</span>
+        <span class="bar-value">99.0%</span>
       </div>
 
   </div>
 
   <div class="section">
     <div class="section-title" data-i18n="cache-section-sessions">All Sessions</div>
-    <div class="filter-bar"><button class="filter-btn active" data-model="all">All</button><button class="filter-btn" data-model="deepseek-v4-flash">deepseek-v4-flash</button><button class="filter-btn" data-model="deepseek-v4-pro">deepseek-v4-pro</button><button class="filter-btn" data-model="kimi-k2.6">kimi-k2.6</button><button class="filter-btn" data-model="unknown">unknown</button></div>
+    <div class="filter-bar"><button class="filter-btn active" data-model="all" data-i18n="cache-filter-all">All</button><button class="filter-btn" data-model="deepseek-v4-flash">deepseek-v4-flash</button><button class="filter-btn" data-model="deepseek-v4-pro">deepseek-v4-pro</button><button class="filter-btn" data-model="kimi-k2.6">kimi-k2.6</button><button class="filter-btn" data-model="unknown">unknown</button></div>
     <div class="table-wrap">
       <table class="data-table" id="sessionTable">
         <thead>
@@ -365,12 +365,12 @@
       <tr data-model="deepseek-v4-flash" title="20260505_143256_2054542a">
         <td data-label="Started">2026-05-05 14:32</td>
         <td data-label="Model"><code>deepseek-v4-flash</code></td>
-        <td data-label="Input">124.2K</td>
-        <td data-label="Cache Read">10.1M</td>
+        <td data-label="Input">134.2K</td>
+        <td data-label="Cache Read">12.9M</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">53.0K</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-good">98.8%</span></td>
-        <td data-label="Msgs">189</td>
+        <td data-label="Output">56.8K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">99.0%</span></td>
+        <td data-label="Msgs">239</td>
       </tr>
       <tr data-model="kimi-k2.6" title="cron_54b5b4eaa3d3_20260505_080005">
         <td data-label="Started">2026-05-05 08:00</td>

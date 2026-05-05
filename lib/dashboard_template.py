@@ -451,14 +451,14 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
 
   <div class="header">
     <div>
-      <div class="eyebrow">Intelligence Dashboard</div>
-      <h1>AI Overview</h1>
-      <div class="subtitle"><span class="dot"></span>Personal activity</div>
+      <div class="eyebrow" data-i18n="dash-eyebrow">Intelligence Dashboard</div>
+      <h1 data-i18n="dash-title">AI Overview</h1>
+      <div class="subtitle"><span class="dot"></span><span data-i18n="dash-personal-activity">Personal activity</span></div>
     </div>
     <div class="actions">
       <div class="segmented">
-        <button class="active" type="button">Personal</button>
-        <button type="button">Team</button>
+        <button class="active" type="button" data-i18n="dash-personal">Personal</button>
+        <button type="button" data-i18n="dash-team">Team</button>
       </div>
       <div class="date-pill">
         <svg class="icon" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
@@ -476,17 +476,17 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
 
   <div class="coding-grid">
     <div class="card">
-      <div class="card-title">Coding Time</div>
+      <div class="card-title" data-i18n="dash-coding-time">Coding Time</div>
       <div class="coding-main">
         <div class="coding-big">{coding_time}</div>
-        <div class="coding-sublabel">Total Time</div>
+        <div class="coding-sublabel" data-i18n="dash-total-time">Total Time</div>
       </div>
       <div class="waka-cats">
 {cat_rows}      </div>
     </div>
 
     <div class="card">
-      <div class="card-title">AI-Driven Work</div>
+      <div class="card-title" data-i18n="dash-ai-driven-work">AI-Driven Work</div>
       <div class="overview-grid">
         <div class="donut-wrap">
           <svg class="donut" viewBox="0 0 160 160">
@@ -495,7 +495,7 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
           </svg>
           <div class="donut-center">
             <strong>{ai_driven_pct}%</strong><br/>
-            <span>AI-driven</span>
+            <span data-i18n="dash-ai-driven">AI-driven</span>
           </div>
         </div>
         <div>
@@ -503,7 +503,7 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
             <div class="legend-row">
               <div class="legend-left">
                 <span class="legend-dot"></span>
-                <span>AI additions</span>
+                <span data-i18n="dash-ai-additions">AI additions</span>
               </div>
               <div>
                 <span class="legend-value">{ai_additions}</span>
@@ -513,7 +513,7 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
             <div class="legend-row">
               <div class="legend-left">
                 <span class="legend-dot muted"></span>
-                <span>Human additions</span>
+                <span data-i18n="dash-human-additions">Human additions</span>
               </div>
               <div>
                 <span class="legend-value">{human_additions}</span>
@@ -523,17 +523,17 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
           </div>
           <div class="bars">
             <div class="bar-row">
-              <div class="bar-head"><span>AI</span><span>{ai_additions}</span></div>
+              <div class="bar-head"><span data-i18n="dash-ai-label">AI</span><span>{ai_additions}</span></div>
               <div class="track"><div class="fill" style="--target:100%"></div></div>
             </div>
             <div class="bar-row">
-              <div class="bar-head"><span>Human</span><span>{human_additions}</span></div>
+              <div class="bar-head"><span data-i18n="dash-human-label">Human</span><span>{human_additions}</span></div>
               <div class="track"><div class="fill zero" style="--target:0%"></div></div>
             </div>
           </div>
           <div class="line-stat">
             <svg class="icon" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg>
-            <strong>{line_changes}</strong> line changes
+            <strong>{line_changes}</strong> <span data-i18n="dash-line-changes">line changes</span>
           </div>
         </div>
       </div>
@@ -544,22 +544,22 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
     <div class="card metric-card">
       <div class="metric-head">
         <span class="metric-icon">$</span>
-        <span>Cost</span>
+        <span data-i18n="dash-cost">Cost</span>
       </div>
       <div class="metric-value">{cost}</div>
-      <div class="metric-sub">{prompts} AI prompts</div>
+      <div class="metric-sub">{prompts} <span data-i18n="dash-prompts-suffix">AI prompts</span></div>
     </div>
     <div class="card metric-card">
       <div class="metric-head">
         <span class="metric-icon">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>
         </span>
-        <span>Tokens</span>
+        <span data-i18n="dash-tokens">Tokens</span>
       </div>
       <div class="metric-value">{tokens_total}</div>
       <div class="pills">
-        <span class="pill">{tokens_in} in</span>
-        <span class="pill">{tokens_out} out</span>
+        <span class="pill">{tokens_in} <span data-i18n="dash-tokens-in">in</span></span>
+        <span class="pill">{tokens_out} <span data-i18n="dash-tokens-out">out</span></span>
       </div>
     </div>
     <div class="card metric-card">
@@ -567,15 +567,15 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
         <span class="metric-icon green">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
         </span>
-        <span>Human follow-up</span>
+        <span data-i18n="dash-human-followup">Human follow-up</span>
       </div>
       <div class="metric-value">{human_followup}</div>
-      <div class="metric-sub">0 edits to AI-touched files</div>
+      <div class="metric-sub" data-i18n="dash-followup-sub">0 edits to AI-touched files</div>
     </div>
   </div>
 
   <div class="footer">
-    <div>Generated by Hermes Agent · {date_range}</div>
+    <div><span data-i18n="dash-generated-by">Generated by Hermes Agent</span> · {date_range}</div>
     <div><a href="https://report.joyehuang.me">report.joyehuang.me</a> · <a href="https://github.com/joyehuang/report">GitHub</a></div>
   </div>
 

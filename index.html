@@ -74,6 +74,31 @@
     text-transform: uppercase;
   }
 
+  .top-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .lang-toggle {
+    width: 44px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--toggle-bg);
+    color: var(--toggle-icon);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+  }
+  .lang-toggle:hover {
+    border-color: var(--border-hover);
+    transform: scale(1.05);
+  }
+
   .theme-toggle {
     width: 40px;
     height: 40px;
@@ -362,7 +387,7 @@
 
   <header class="site-header">
     <h1 data-i18n="index-title">AI <span data-i18n="index-title-usage">Usage</span> Report</h1>
-    <p class="subtitle">Daily insights from AI-assisted workflows. Hermes Agent sessions + WakaTime coding data.</p>
+    <p class="subtitle" data-i18n="index-subtitle-detail">Daily insights from AI-assisted workflows. Hermes Agent sessions + WakaTime coding data.</p>
     <div class="nav-links">
       <a href="https://joyehuang.me" target="_blank">
         <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -376,104 +401,104 @@
   </header>
 
   <section class="featured">
-    <div class="featured-label">Cumulative Overview</div>
+    <div class="featured-label" data-i18n="index-featured-overview">Cumulative Overview</div>
     <a class="featured-card" href="overview.html">
-      <div class="date">Cumulative Overview</div>
-      <div class="title">AI Usage Overview</div>
+      <div class="date" data-i18n="index-featured-overview">Cumulative Overview</div>
+      <div class="title" data-i18n="index-overview-card-title">AI Usage Overview</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">$281</div>
-          <div class="lbl">Cost</div>
+          <div class="lbl" data-i18n="stat-cost">Cost</div>
         </div>
         <div class="stat">
           <div class="num">202.5M</div>
-          <div class="lbl">Tokens</div>
+          <div class="lbl" data-i18n="stat-tokens">Tokens</div>
         </div>
         <div class="stat">
           <div class="num">41h 22m</div>
-          <div class="lbl">Coding</div>
+          <div class="lbl" data-i18n="stat-coding">Coding</div>
         </div>
         <div class="stat">
           <div class="num">198</div>
-          <div class="lbl">Prompts</div>
+          <div class="lbl" data-i18n="stat-prompts">Prompts</div>
         </div>
       </div>
     </a>
   </section>
 
   <section class="featured">
-    <div class="featured-label">Latest Receipt</div>
+    <div class="featured-label" data-i18n="index-featured-receipt">Latest Receipt</div>
     <a class="featured-card" href="archive/joye-receipt-2026-05-04.html">
       <div class="date">May 4, 2026</div>
-      <div class="title">Hermes Agent Daily Receipt — 2026-05-04</div>
+      <div class="title"><span data-i18n="index-receipt-card-title">Hermes Agent Daily Receipt</span> — 2026-05-04</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">11</div>
-          <div class="lbl">Sessions</div>
+          <div class="lbl" data-i18n="stat-sessions">Sessions</div>
         </div>
         <div class="stat">
           <div class="num">2.4M</div>
-          <div class="lbl">Tokens</div>
+          <div class="lbl" data-i18n="stat-tokens">Tokens</div>
         </div>
         <div class="stat">
           <div class="num">1377</div>
-          <div class="lbl">Messages</div>
+          <div class="lbl" data-i18n="stat-messages">Messages</div>
         </div>
         <div class="stat">
           <div class="num">623</div>
-          <div class="lbl">Tool Calls</div>
+          <div class="lbl" data-i18n="stat-tool-calls">Tool Calls</div>
         </div>
       </div>
     </a>
   </section>
 
   <section class="featured" style="margin-bottom:32px">
-    <div class="featured-label">AI Overview</div>
+    <div class="featured-label" data-i18n="index-featured-ai">AI Overview</div>
     <a class="featured-card" href="archive/ai-overview-2026-05-04.html">
       <div class="date">Apr 28 - May 4, 2026</div>
-      <div class="title">AI Overview Dashboard</div>
+      <div class="title" data-i18n="index-dashboard-card-title">AI Overview Dashboard</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">41h 22m</div>
-          <div class="lbl">Coding</div>
+          <div class="lbl" data-i18n="stat-coding">Coding</div>
         </div>
         <div class="stat">
           <div class="num">197.9M</div>
-          <div class="lbl">AI In</div>
+          <div class="lbl" data-i18n="stat-ai-in">AI In</div>
         </div>
         <div class="stat">
           <div class="num">198</div>
-          <div class="lbl">Prompts</div>
+          <div class="lbl" data-i18n="stat-prompts">Prompts</div>
         </div>
         <div class="stat">
           <div class="num">—</div>
-          <div class="lbl">Sessions</div>
+          <div class="lbl" data-i18n="stat-sessions">Sessions</div>
         </div>
       </div>
     </a>
   </section>
 
   <section class="featured" style="margin-bottom:32px">
-    <div class="featured-label">Cache Analysis</div>
+    <div class="featured-label" data-i18n="index-featured-cache">Cache Analysis</div>
     <a class="featured-card" href="cache.html">
-      <div class="date">Prompt Caching</div>
+      <div class="date" data-i18n="index-prompt-caching">Prompt Caching</div>
       <div class="title" data-i18n="index-featured-cache">Cache Analysis</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">26</div>
-          <div class="lbl">Sessions</div>
+          <div class="lbl" data-i18n="stat-sessions">Sessions</div>
         </div>
         <div class="stat">
           <div class="num">74%</div>
-          <div class="lbl">Avg Ratio</div>
+          <div class="lbl" data-i18n="stat-avg-ratio">Avg Ratio</div>
         </div>
         <div class="stat">
-          <div class="num">67.2M</div>
-          <div class="lbl">Cache Read</div>
+          <div class="num">70.1M</div>
+          <div class="lbl" data-i18n="stat-cache-read">Cache Read</div>
         </div>
         <div class="stat">
           <div class="num">→</div>
-          <div class="lbl">Model + Session</div>
+          <div class="lbl" data-i18n="stat-model-session">Model + Session</div>
         </div>
       </div>
     </a>
@@ -481,8 +506,8 @@
 
   <section class="archive">
     <div class="archive-header">
-      <h2>Daily Receipt Archive</h2>
-      <span class="archive-count">2 reports</span>
+      <h2 data-i18n="index-archive-receipts">Daily Receipt Archive</h2>
+      <span class="archive-count">2 <span data-i18n="index-reports-suffix">reports</span></span>
     </div>
     <div class="archive-grid">
       <a class="archive-item" href="archive/joye-receipt-2026-05-04.html">
@@ -504,8 +529,8 @@
 
   <section class="archive">
     <div class="archive-header">
-      <h2>AI Overview Archive</h2>
-      <span class="archive-count">1 weeks</span>
+      <h2 data-i18n="index-archive-ai">AI Overview Archive</h2>
+      <span class="archive-count">1 <span data-i18n="index-weeks-suffix">weeks</span></span>
     </div>
     <div class="archive-grid">
       <a class="archive-item" href="archive/ai-overview-2026-05-04.html">

@@ -138,7 +138,7 @@ def generate():
 
     # --- Session-level section ---
     models = sorted({(s["model"] or "unknown") for s in sessions})
-    filter_buttons = '<button class="filter-btn active" data-model="all">All</button>'
+    filter_buttons = '<button class="filter-btn active" data-model="all" data-i18n="cache-filter-all">All</button>'
     for m in models:
         filter_buttons += (
             f'<button class="filter-btn" data-model="{html_lib.escape(m)}">'
@@ -485,8 +485,8 @@ def generate():
 
   <div class="insight">
     <strong data-i18n="cache-insight-title">About Cache Hit Ratio</strong><br>
-    <span>Prompt caching reduces token consumption by reusing previously computed context. A higher <strong>cache_read</strong> means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
-    <span>Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns <code>cached_tokens</code> but not <code>cache_write_tokens</code> — hence Cache Write shows as 0. The Anthropic API does report <code>cache_creation_input_tokens</code> separately.</span>
+    <span data-i18n="cache-insight-body-1">Prompt caching reduces token consumption by reusing previously computed context. A higher cache_read means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
+    <span data-i18n="cache-insight-body-2">Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns cached_tokens but not cache_write_tokens — hence Cache Write shows as 0. The Anthropic API does report cache_creation_input_tokens separately.</span>
   </div>
 
   <div class="section">

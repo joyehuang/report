@@ -46,11 +46,11 @@ def generate():
     grand_tokens = hermes_tokens + waka_tokens
     grand_cost = get_summary()
 
-    # Build stat cards (only 3 as requested)
+    # Build stat cards (only 3 as requested) — tuple: (label, value, sub, label_i18n_key, sub_i18n_key)
     stat_cards = [
-        ("Total Tokens", fmt_tokens(grand_tokens), f"Hermes {fmt_tokens(hermes_tokens)} + WakaTime {fmt_tokens(waka_tokens)}"),
-        ("Total Cost", f"${grand_cost['total_usd']:.2f}", "USD spent on AI"),
-        ("Coding Time", fmt_duration(waka.get("total_seconds", 0)), "Total coding hours"),
+        ("Total Tokens", fmt_tokens(grand_tokens), f"Hermes {fmt_tokens(hermes_tokens)} + WakaTime {fmt_tokens(waka_tokens)}", "overview-total-tokens", None),
+        ("Total Cost", f"${grand_cost['total_usd']:.2f}", "USD spent on AI", "overview-total-cost", "overview-cost-sub"),
+        ("Coding Time", fmt_duration(waka.get("total_seconds", 0)), "Total coding hours", "overview-coding-time", "overview-coding-sub"),
     ]
 
     # Provider cost bars
@@ -268,26 +268,28 @@ def generate():
   </div>
 
   <div class="header">
-    <h1>AI <span>Overview</span></h1>
-    <p class="meta">Cumulative stats · {days_recorded} days recorded · {date_range}</p>
+    <h1><span data-i18n="overview-title">Cumulative</span> <span data-i18n="overview-title-accent">Overview</span></h1>
+    <p class="meta"><span data-i18n="overview-meta-stats">Cumulative stats</span> · {days_recorded} <span data-i18n="overview-meta-days">days recorded</span> · {date_range}</p>
   </div>
 
   <div class="stats-grid">
 """
 
-    for label, value, sub in stat_cards:
+    for label, value, sub, label_key, sub_key in stat_cards:
+        sub_attr = f' data-i18n="{sub_key}"' if sub_key else ''
         html += f"""    <div class="stat-card">
       <div class="num">{value}</div>
-      <div class="lbl">{label}</div>
-      <div class="sub">{sub}</div>
+      <div class="lbl" data-i18n="{label_key}">{label}</div>
+      <div class="sub"{sub_attr}>{sub}</div>
     </div>
 """
 
+    no_cost_msg = '    <p style="color:var(--text-muted);font-size:13px;" data-i18n="overview-no-cost-data">No cost data yet.</p>'
     html += f"""  </div>
 
   <div class="section">
     <div class="section-title" data-i18n="overview-cost-provider">Cost by Provider</div>
-{provider_bars or '    <p style="color:var(--text-muted);font-size:13px;">No cost data yet.</p>'}
+{provider_bars or no_cost_msg}
   </div>
 
 """
@@ -307,19 +309,19 @@ def generate():
 
     # Cache stats section
     html += f"""  <div class="section">
-    <div class="section-title">Hermes Agent Cache</div>
+    <div class="section-title" data-i18n="overview-cache-section-title">Hermes Agent Cache</div>
     <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0;">
       <div class="stat-card" style="border: none; padding: 16px;">
         <div class="num">{fmt_tokens(hermes_cache_read)}</div>
-        <div class="lbl">Cache Read</div>
+        <div class="lbl" data-i18n="stat-cache-read">Cache Read</div>
       </div>
       <div class="stat-card" style="border: none; padding: 16px;">
         <div class="num">{fmt_tokens(hermes_cache_write)}</div>
-        <div class="lbl">Cache Write</div>
+        <div class="lbl" data-i18n="stat-cache-write">Cache Write</div>
       </div>
       <div class="stat-card" style="border: none; padding: 16px;">
         <div class="num">{cache_hit_ratio:.1f}%</div>
-        <div class="lbl">Hit Ratio</div>
+        <div class="lbl" data-i18n="stat-hit-ratio">Hit Ratio</div>
       </div>
     </div>
     <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">

@@ -178,24 +178,24 @@ def generate():
         waka_tokens = waka.get("total_ai_in", 0) + waka.get("total_ai_out", 0)
         grand_tokens = hermes_tokens + waka_tokens
         overview_card = f"""    <a class="featured-card" href="overview.html">
-      <div class="date">Cumulative Overview</div>
-      <div class="title">AI Usage Overview</div>
+      <div class="date" data-i18n="index-featured-overview">Cumulative Overview</div>
+      <div class="title" data-i18n="index-overview-card-title">AI Usage Overview</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">${cost['total_usd']:.0f}</div>
-          <div class="lbl">Cost</div>
+          <div class="lbl" data-i18n="stat-cost">Cost</div>
         </div>
         <div class="stat">
           <div class="num">{fmt_big(grand_tokens)}</div>
-          <div class="lbl">Tokens</div>
+          <div class="lbl" data-i18n="stat-tokens">Tokens</div>
         </div>
         <div class="stat">
           <div class="num">{fmt_duration(waka.get('total_seconds', 0))}</div>
-          <div class="lbl">Coding</div>
+          <div class="lbl" data-i18n="stat-coding">Coding</div>
         </div>
         <div class="stat">
           <div class="num">{fmt_big(waka.get('total_prompts', 0))}</div>
-          <div class="lbl">Prompts</div>
+          <div class="lbl" data-i18n="stat-prompts">Prompts</div>
         </div>
       </div>
     </a>"""
@@ -206,55 +206,60 @@ def generate():
     if receipt:
         receipt_card = f"""    <a class="featured-card" href="{receipt['href']}">
       <div class="date">{receipt['display_date']}</div>
-      <div class="title">Hermes Agent Daily Receipt — {receipt['short_date']}</div>
+      <div class="title"><span data-i18n="index-receipt-card-title">Hermes Agent Daily Receipt</span> — {receipt['short_date']}</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">{receipt['sessions']}</div>
-          <div class="lbl">Sessions</div>
+          <div class="lbl" data-i18n="stat-sessions">Sessions</div>
         </div>
         <div class="stat">
           <div class="num">{receipt['tokens']}</div>
-          <div class="lbl">Tokens</div>
+          <div class="lbl" data-i18n="stat-tokens">Tokens</div>
         </div>
         <div class="stat">
           <div class="num">{receipt['messages']}</div>
-          <div class="lbl">Messages</div>
+          <div class="lbl" data-i18n="stat-messages">Messages</div>
         </div>
         <div class="stat">
           <div class="num">{receipt['tool_calls']}</div>
-          <div class="lbl">Tool Calls</div>
+          <div class="lbl" data-i18n="stat-tool-calls">Tool Calls</div>
         </div>
       </div>
     </a>"""
     else:
-        receipt_card = '<div class="featured-card"><div class="title">No receipts yet</div></div>'
+        receipt_card = '<div class="featured-card"><div class="title" data-i18n="index-no-receipts">No receipts yet</div></div>'
 
     # Build dashboard card
     if dashboard:
+        week_range = dashboard['week_range']
+        if week_range:
+            date_html = f'<div class="date">{week_range}</div>'
+        else:
+            date_html = '<div class="date" data-i18n="index-weekly-overview">Weekly Overview</div>'
         dashboard_card = f"""    <a class="featured-card" href="{dashboard['href']}">
-      <div class="date">{dashboard['week_range'] or 'Weekly Overview'}</div>
-      <div class="title">AI Overview Dashboard</div>
+      {date_html}
+      <div class="title" data-i18n="index-dashboard-card-title">AI Overview Dashboard</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">{dashboard['coding_time']}</div>
-          <div class="lbl">Coding</div>
+          <div class="lbl" data-i18n="stat-coding">Coding</div>
         </div>
         <div class="stat">
           <div class="num">{dashboard['ai_in']}</div>
-          <div class="lbl">AI In</div>
+          <div class="lbl" data-i18n="stat-ai-in">AI In</div>
         </div>
         <div class="stat">
           <div class="num">{dashboard['prompts']}</div>
-          <div class="lbl">Prompts</div>
+          <div class="lbl" data-i18n="stat-prompts">Prompts</div>
         </div>
         <div class="stat">
           <div class="num">{dashboard['sessions']}</div>
-          <div class="lbl">Sessions</div>
+          <div class="lbl" data-i18n="stat-sessions">Sessions</div>
         </div>
       </div>
     </a>"""
     else:
-        dashboard_card = '<div class="featured-card"><div class="title">AI Overview — no data</div></div>'
+        dashboard_card = '<div class="featured-card"><div class="title" data-i18n="index-no-overview">AI Overview — no data</div></div>'
 
     # Build session cache card
     try:
@@ -276,29 +281,29 @@ def generate():
         avg_ratio = row[1] or 0
         total_cache = row[2] or 0
         session_cache_card = f"""    <a class="featured-card" href="cache.html">
-      <div class="date">Prompt Caching</div>
+      <div class="date" data-i18n="index-prompt-caching">Prompt Caching</div>
       <div class="title" data-i18n="index-featured-cache">Cache Analysis</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">{sess_cnt}</div>
-          <div class="lbl">Sessions</div>
+          <div class="lbl" data-i18n="stat-sessions">Sessions</div>
         </div>
         <div class="stat">
           <div class="num">{avg_ratio:.0f}%</div>
-          <div class="lbl">Avg Ratio</div>
+          <div class="lbl" data-i18n="stat-avg-ratio">Avg Ratio</div>
         </div>
         <div class="stat">
           <div class="num">{fmt_big(total_cache)}</div>
-          <div class="lbl">Cache Read</div>
+          <div class="lbl" data-i18n="stat-cache-read">Cache Read</div>
         </div>
         <div class="stat">
           <div class="num">→</div>
-          <div class="lbl">Model + Session</div>
+          <div class="lbl" data-i18n="stat-model-session">Model + Session</div>
         </div>
       </div>
     </a>"""
     except Exception:
-        session_cache_card = '<div class="featured-card"><div class="title">Session Cache — no data</div></div>'
+        session_cache_card = '<div class="featured-card"><div class="title" data-i18n="index-no-session-cache">Session Cache — no data</div></div>'
 
     # Build archive grids
     archive_items = get_archive_list()
@@ -399,6 +404,31 @@ def generate():
     color: var(--text-dim);
     letter-spacing: 3px;
     text-transform: uppercase;
+  }}
+
+  .top-actions {{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }}
+
+  .lang-toggle {{
+    width: 44px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--toggle-bg);
+    color: var(--toggle-icon);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+  }}
+  .lang-toggle:hover {{
+    border-color: var(--border-hover);
+    transform: scale(1.05);
   }}
 
   .theme-toggle {{
@@ -689,7 +719,7 @@ def generate():
 
   <header class="site-header">
     <h1 data-i18n="index-title">AI <span data-i18n="index-title-usage">Usage</span> Report</h1>
-    <p class="subtitle">Daily insights from AI-assisted workflows. Hermes Agent sessions + WakaTime coding data.</p>
+    <p class="subtitle" data-i18n="index-subtitle-detail">Daily insights from AI-assisted workflows. Hermes Agent sessions + WakaTime coding data.</p>
     <div class="nav-links">
       <a href="https://joyehuang.me" target="_blank">
         <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -703,29 +733,29 @@ def generate():
   </header>
 
   <section class="featured">
-    <div class="featured-label">Cumulative Overview</div>
+    <div class="featured-label" data-i18n="index-featured-overview">Cumulative Overview</div>
 {overview_card}
   </section>
 
   <section class="featured">
-    <div class="featured-label">Latest Receipt</div>
+    <div class="featured-label" data-i18n="index-featured-receipt">Latest Receipt</div>
 {receipt_card}
   </section>
 
   <section class="featured" style="margin-bottom:32px">
-    <div class="featured-label">AI Overview</div>
+    <div class="featured-label" data-i18n="index-featured-ai">AI Overview</div>
 {dashboard_card}
   </section>
 
   <section class="featured" style="margin-bottom:32px">
-    <div class="featured-label">Cache Analysis</div>
+    <div class="featured-label" data-i18n="index-featured-cache">Cache Analysis</div>
 {session_cache_card}
   </section>
 
   <section class="archive">
     <div class="archive-header">
-      <h2>Daily Receipt Archive</h2>
-      <span class="archive-count">{len(archive_items)} reports</span>
+      <h2 data-i18n="index-archive-receipts">Daily Receipt Archive</h2>
+      <span class="archive-count">{len(archive_items)} <span data-i18n="index-reports-suffix">reports</span></span>
     </div>
     <div class="archive-grid">
 {archive_grid}    </div>
@@ -733,8 +763,8 @@ def generate():
 
   <section class="archive">
     <div class="archive-header">
-      <h2>AI Overview Archive</h2>
-      <span class="archive-count">{len(dashboard_archive_items)} weeks</span>
+      <h2 data-i18n="index-archive-ai">AI Overview Archive</h2>
+      <span class="archive-count">{len(dashboard_archive_items)} <span data-i18n="index-weeks-suffix">weeks</span></span>
     </div>
     <div class="archive-grid">
 {dashboard_archive_grid}    </div>

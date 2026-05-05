@@ -193,14 +193,14 @@
 
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="num">202.5M</div>
+      <div class="num">202.6M</div>
       <div class="lbl" data-i18n="overview-total-tokens">Total Tokens</div>
-      <div class="sub">Hermes 3.9M + WakaTime 198.6M</div>
+      <div class="sub">Hermes 4.0M + WakaTime 198.6M</div>
     </div>
     <div class="stat-card">
-      <div class="num">$440.58</div>
+      <div class="num">$424.00</div>
       <div class="lbl" data-i18n="overview-total-cost">Total Cost</div>
-      <div class="sub" data-i18n="overview-cost-combined" data-i18n-args='["281", "160"]'>AI $281 + Services $160</div>
+      <div class="sub" data-i18n="overview-cost-combined" data-i18n-args='["281", "143"]'>Token Cost $281 + Service Cost $143</div>
     </div>
     <div class="stat-card">
       <div class="num">41h 22m</div>
@@ -245,6 +245,33 @@
   </div>
 
   <div class="section">
+    <div class="section-title" data-i18n="overview-service-costs">Service Costs</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:4px;" data-i18n="overview-service-costs-desc">Infrastructure &amp; hosting services</p>
+    <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;font-family:'JetBrains Mono',monospace;"><span data-i18n="overview-total-label">Total</span>: $143.42</p>
+    <table class="cost-table">
+      <thead>
+        <tr><th data-i18n="stat-service">Service</th><th data-i18n="stat-monthly-cost">Monthly Cost</th><th data-i18n="stat-total">Total</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Vercel</td>
+        <td>$59.50</td>
+        <td>$80.00</td>
+      </tr>
+      <tr>
+        <td>Typeless</td>
+        <td>$60.00</td>
+        <td>$60.00</td>
+      </tr>
+      <tr>
+        <td>Cloudflare</td>
+        <td>$3.42</td>
+        <td>$3.42</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section">
     <div class="section-title" data-i18n="overview-monthly-cost">Monthly Cost</div>
     <table class="cost-table">
       <thead>
@@ -263,41 +290,10 @@
     </table>
   </div>
   <div class="section">
-    <div class="section-title" data-i18n="overview-service-costs">Service Costs</div>
-    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" data-i18n="overview-service-costs-desc">Infrastructure &amp; hosting services</p>
-    <table class="cost-table">
-      <thead>
-        <tr><th data-i18n="stat-service">Service</th><th data-i18n="stat-monthly-cost">Monthly Cost</th><th data-i18n="stat-total">Total</th></tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>Aws</td>
-        <td>$50.00</td>
-        <td>$100.00</td>
-      </tr>
-      <tr>
-        <td>Vercel</td>
-        <td>$20.00</td>
-        <td>$40.00</td>
-      </tr>
-      <tr>
-        <td>Cloudflare</td>
-        <td>$10.00</td>
-        <td>$20.00</td>
-      </tr>
-      <tr>
-        <td>Typeless</td>
-        <td>$0.00</td>
-        <td>$0.00</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="section">
     <div class="section-title" data-i18n="overview-cache-section-title">Hermes Agent Cache</div>
     <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0;">
       <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">71.6M</div>
+        <div class="num">73.0M</div>
         <div class="lbl" data-i18n="stat-cache-read">Cache Read</div>
       </div>
       <div class="stat-card" style="border: none; padding: 16px;">
@@ -305,7 +301,7 @@
         <div class="lbl" data-i18n="stat-cache-write">Cache Write</div>
       </div>
       <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">95.4%</div>
+        <div class="num">95.5%</div>
         <div class="lbl" data-i18n="stat-hit-ratio">Hit Ratio</div>
       </div>
     </div>

@@ -49,9 +49,9 @@ def generate():
     svc_cost = grand_cost["services"]
     combined_total = grand_cost["combined_total"]
 
-    # Combined cost subtitle (e.g. "AI $280 + Services $50")
+    # Combined cost subtitle (e.g. "Token Cost $280 + Service Cost $143")
     combined_sub_args = [f"{ai_cost['total_usd']:.0f}", f"{svc_cost['total_usd']:.0f}"]
-    combined_sub_text = f"AI ${combined_sub_args[0]} + Services ${combined_sub_args[1]}"
+    combined_sub_text = f"Token Cost ${combined_sub_args[0]} + Service Cost ${combined_sub_args[1]}"
 
     # Build stat cards (only 3 as requested) — tuple: (label, value, sub, label_i18n_key, sub_i18n_key, sub_args)
     stat_cards = [
@@ -322,6 +322,23 @@ def generate():
 
 """
 
+    # Service Costs section (moved above Monthly Cost)
+    if service_rows:
+        svc_total_text = f"${svc_cost['total_usd']:.2f}"
+        html += f"""  <div class="section">
+    <div class="section-title" data-i18n="overview-service-costs">Service Costs</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:4px;" data-i18n="overview-service-costs-desc">Infrastructure &amp; hosting services</p>
+    <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;font-family:'JetBrains Mono',monospace;"><span data-i18n="overview-total-label">Total</span>: {svc_total_text}</p>
+    <table class="cost-table">
+      <thead>
+        <tr><th data-i18n="stat-service">Service</th><th data-i18n="stat-monthly-cost">Monthly Cost</th><th data-i18n="stat-total">Total</th></tr>
+      </thead>
+      <tbody>
+{service_rows}      </tbody>
+    </table>
+  </div>
+"""
+
     if month_rows:
         html += f"""  <div class="section">
     <div class="section-title" data-i18n="overview-monthly-cost">Monthly Cost</div>
@@ -331,21 +348,6 @@ def generate():
       </thead>
       <tbody>
 {month_rows}      </tbody>
-    </table>
-  </div>
-"""
-
-    # Service Costs section
-    if service_rows:
-        html += f"""  <div class="section">
-    <div class="section-title" data-i18n="overview-service-costs">Service Costs</div>
-    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" data-i18n="overview-service-costs-desc">Infrastructure &amp; hosting services</p>
-    <table class="cost-table">
-      <thead>
-        <tr><th data-i18n="stat-service">Service</th><th data-i18n="stat-monthly-cost">Monthly Cost</th><th data-i18n="stat-total">Total</th></tr>
-      </thead>
-      <tbody>
-{service_rows}      </tbody>
     </table>
   </div>
 """

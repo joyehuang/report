@@ -10,7 +10,7 @@ from lib.hermes_db import aggregate_all_time
 from lib.wakatime_history import get_cumulative
 from lib.cost_tracker import get_summary
 
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "archive")
+OUTPUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def fmt_tokens(n):
@@ -147,6 +147,16 @@ def generate():
   }}
   .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon {{ display: none; }}
   [data-theme="light"] .theme-toggle .sun {{ display: block; }}
+
+  .top-actions {{ display: flex; gap: 8px; align-items: center; }}
+  .lang-toggle {{
+    width: 44px; height: 40px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--toggle-bg);
+    color: var(--toggle-icon); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+    letter-spacing: 1px; transition: all 0.2s ease;
+  }}
+  .lang-toggle:hover {{ transform: scale(1.05); border-color: var(--accent); }}
 
   .header {{ margin-bottom: 32px; }}
   .header h1 {{ font-size: 36px; font-weight: 700; letter-spacing: -1px; }}

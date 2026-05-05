@@ -62,7 +62,7 @@ def render_receipt(**data):
 """
 
     return f"""<!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -154,6 +154,26 @@ def render_receipt(**data):
   }}
   .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon {{ display: none; }}
   [data-theme="light"] .theme-toggle .sun {{ display: block; }}
+
+  .top-actions-fixed {{
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }}
+  .lang-toggle {{
+    width: 44px; height: 44px; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--card-bg);
+    color: var(--text-primary); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 600; letter-spacing: 1px;
+    display: grid; place-items: center;
+    transition: all 0.2s ease; box-shadow: var(--shadow);
+  }}
+  .lang-toggle:hover {{ transform: scale(1.08); border-color: var(--accent); }}
 
   .receipt {{
     background: var(--bg-receipt);
@@ -280,10 +300,13 @@ def render_receipt(**data):
 </head>
 <body>
 
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
-  <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
-</button>
+<div class="top-actions-fixed">
+  <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+  </button>
+</div>
 
 <div class="receipt-wrapper">
   <div class="printer-light"></div>

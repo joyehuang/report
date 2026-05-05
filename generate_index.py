@@ -177,7 +177,7 @@ def generate():
         hermes_tokens = hermes.get("total_input", 0) + hermes.get("total_output", 0)
         waka_tokens = waka.get("total_ai_in", 0) + waka.get("total_ai_out", 0)
         grand_tokens = hermes_tokens + waka_tokens
-        overview_card = f"""    <a class="featured-card" href="archive/overview.html">
+        overview_card = f"""    <a class="featured-card" href="overview.html">
       <div class="date">Cumulative Overview</div>
       <div class="title">AI Usage Overview</div>
       <div class="featured-stats">
@@ -275,7 +275,7 @@ def generate():
         sess_cnt = row[0] or 0
         avg_ratio = row[1] or 0
         total_cache = row[2] or 0
-        session_cache_card = f"""    <a class="featured-card" href="archive/cache.html">
+        session_cache_card = f"""    <a class="featured-card" href="cache.html">
       <div class="date">Prompt Caching</div>
       <div class="title" data-i18n="index-featured-cache">Cache Analysis</div>
       <div class="featured-stats">

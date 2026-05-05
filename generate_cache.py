@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate merged Cache Analysis page (model-level + session-level) at archive/cache.html."""
+"""Generate merged Cache Analysis page (model-level + session-level) at cache.html."""
 
 import os
 import sys
@@ -7,7 +7,7 @@ import sqlite3
 import html as html_lib
 from datetime import datetime, timezone, timedelta
 
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "archive")
+OUTPUT_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.expanduser("~/.hermes/state.db")
 MELBOURNE_TZ = timezone(timedelta(hours=10))
 
@@ -136,26 +136,6 @@ def generate():
       </div>
 """
 
-    model_rows_html = ""
-    for row in model_rows:
-        model = row['model'] or 'unknown'
-        inp = row['input'] or 0
-        cr = row['cache_read'] or 0
-        cw = row['cache_write'] or 0
-        out = row['output'] or 0
-        pt = inp + cr
-        ratio = (cr / pt * 100) if pt > 0 else 0
-        model_rows_html += f"""      <tr>
-        <td><code>{html_lib.escape(model)}</code></td>
-        <td>{row['sessions']}</td>
-        <td>{fmt_tokens(inp)}</td>
-        <td>{fmt_tokens(cr)}</td>
-        <td>{fmt_tokens(cw)}</td>
-        <td>{fmt_tokens(out)}</td>
-        <td><span class="ratio">{ratio:.1f}%</span></td>
-      </tr>
-"""
-
     # --- Session-level section ---
     models = sorted({(s["model"] or "unknown") for s in sessions})
     filter_buttons = '<button class="filter-btn active" data-model="all">All</button>'
@@ -257,6 +237,16 @@ def generate():
   }}
   .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon {{ display: none; }}
   [data-theme="light"] .theme-toggle .sun {{ display: block; }}
+
+  .top-actions {{ display: flex; gap: 8px; align-items: center; }}
+  .lang-toggle {{
+    width: 44px; height: 40px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--toggle-bg);
+    color: var(--toggle-icon); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+    letter-spacing: 1px; transition: all 0.2s ease;
+  }}
+  .lang-toggle:hover {{ transform: scale(1.05); border-color: var(--accent); }}
 
   .header {{ margin-bottom: 32px; }}
   .header h1 {{ font-size: 36px; font-weight: 700; letter-spacing: -1px; }}
@@ -435,11 +425,6 @@ def generate():
       font-weight: 600;
       font-size: 13px;
     }}
-
-    /* Model table stays as table with horizontal scroll */
-    .data-table#modelTable {{ font-size: 11px; }}
-    .data-table#modelTable th,
-    .data-table#modelTable td {{ padding: 8px 6px; }}
   }}
 
   @media (max-width: 480px) {{
@@ -455,7 +440,7 @@ def generate():
 
 <div class="page">
   <div class="top-bar">
-    <div class="brand"><a href="../index.html" data-i18n="back-home">← AI Usage Report</a></div>
+    <div class="brand"><a href="index.html" data-i18n="back-home">← AI Usage Report</a></div>
     <div class="top-actions">
       <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -500,34 +485,13 @@ def generate():
 
   <div class="insight">
     <strong data-i18n="cache-insight-title">About Cache Hit Ratio</strong><br>
-    <span data-i18n="cache-insight-body-1">Prompt caching reduces token consumption by reusing previously computed context. A higher <strong>cache_read</strong> means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
-    <span data-i18n="cache-insight-body-2">Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns <code>cached_tokens</code> but not <code>cache_write_tokens</code> — hence Cache Write shows as 0. The Anthropic API does report <code>cache_creation_input_tokens</code> separately.</span>
+    <span>Prompt caching reduces token consumption by reusing previously computed context. A higher <strong>cache_read</strong> means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
+    <span>Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns <code>cached_tokens</code> but not <code>cache_write_tokens</code> — hence Cache Write shows as 0. The Anthropic API does report <code>cache_creation_input_tokens</code> separately.</span>
   </div>
 
   <div class="section">
     <div class="section-title" data-i18n="cache-section-model">Cache Hit Ratio by Model</div>
 {ratio_bars}
-  </div>
-
-  <div class="section">
-    <div class="section-title" data-i18n="cache-section-model-table">Model Breakdown</div>
-    <div class="table-wrap">
-      <table class="data-table" id="modelTable">
-        <thead>
-          <tr>
-            <th data-i18n="th-model">Model</th>
-            <th data-i18n="th-sessions">Sessions</th>
-            <th data-i18n="th-input">Input</th>
-            <th data-i18n="th-cache-read">Cache Read</th>
-            <th data-i18n="th-cache-write">Cache Write</th>
-            <th data-i18n="th-output">Output</th>
-            <th data-i18n="th-hit-ratio">Hit Ratio</th>
-          </tr>
-        </thead>
-        <tbody>
-{model_rows_html}        </tbody>
-      </table>
-    </div>
   </div>
 
   <div class="section">
@@ -594,7 +558,7 @@ def generate():
 }})();
 </script>
 
-<script src="../assets/i18n.js"></script>
+<script src="assets/i18n.js"></script>
 </body>
 </html>"""
 

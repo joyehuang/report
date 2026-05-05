@@ -256,6 +256,50 @@ def generate():
     else:
         dashboard_card = '<div class="featured-card"><div class="title">AI Overview — no data</div></div>'
 
+    # Build session cache card
+    try:
+        import sqlite3
+        DB_PATH = os.path.expanduser("~/.hermes/state.db")
+        conn = sqlite3.connect(DB_PATH)
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT COUNT(*) as cnt,
+                   AVG(CASE WHEN (input_tokens + cache_read_tokens) > 0
+                       THEN CAST(cache_read_tokens AS FLOAT) / (input_tokens + cache_read_tokens) * 100
+                       ELSE 0 END) as avg_ratio,
+                   SUM(cache_read_tokens) as total_cache
+            FROM sessions
+        """)
+        row = cur.fetchone()
+        conn.close()
+        sess_cnt = row[0] or 0
+        avg_ratio = row[1] or 0
+        total_cache = row[2] or 0
+        session_cache_card = f"""    <a class="featured-card" href="archive/session-cache.html">
+      <div class="date">Session-level</div>
+      <div class="title">Session Cache Analysis</div>
+      <div class="featured-stats">
+        <div class="stat">
+          <div class="num">{sess_cnt}</div>
+          <div class="lbl">Sessions</div>
+        </div>
+        <div class="stat">
+          <div class="num">{avg_ratio:.0f}%</div>
+          <div class="lbl">Avg Ratio</div>
+        </div>
+        <div class="stat">
+          <div class="num">{fmt_big(total_cache)}</div>
+          <div class="lbl">Cache Read</div>
+        </div>
+        <div class="stat">
+          <div class="num">→</div>
+          <div class="lbl">Details</div>
+        </div>
+      </div>
+    </a>"""
+    except Exception:
+        session_cache_card = '<div class="featured-card"><div class="title">Session Cache — no data</div></div>'
+
     # Build archive grids
     archive_items = get_archive_list()
     archive_grid = ""
@@ -668,6 +712,11 @@ def generate():
   <section class="featured" style="margin-bottom:32px">
     <div class="featured-label">AI Overview</div>
 {dashboard_card}
+  </section>
+
+  <section class="featured" style="margin-bottom:32px">
+    <div class="featured-label">Cache Analysis</div>
+{session_cache_card}
   </section>
 
   <section class="archive">

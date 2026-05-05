@@ -45,19 +45,26 @@ def generate():
     # Grand total (Hermes input+output + WakaTime, cache excluded)
     grand_tokens = hermes_tokens + waka_tokens
     grand_cost = get_summary()
+    ai_cost = grand_cost["ai"]
+    svc_cost = grand_cost["services"]
+    combined_total = grand_cost["combined_total"]
 
-    # Build stat cards (only 3 as requested) — tuple: (label, value, sub, label_i18n_key, sub_i18n_key)
+    # Combined cost subtitle (e.g. "AI $280 + Services $50")
+    combined_sub_args = [f"{ai_cost['total_usd']:.0f}", f"{svc_cost['total_usd']:.0f}"]
+    combined_sub_text = f"AI ${combined_sub_args[0]} + Services ${combined_sub_args[1]}"
+
+    # Build stat cards (only 3 as requested) — tuple: (label, value, sub, label_i18n_key, sub_i18n_key, sub_args)
     stat_cards = [
-        ("Total Tokens", fmt_tokens(grand_tokens), f"Hermes {fmt_tokens(hermes_tokens)} + WakaTime {fmt_tokens(waka_tokens)}", "overview-total-tokens", None),
-        ("Total Cost", f"${grand_cost['total_usd']:.2f}", "USD spent on AI", "overview-total-cost", "overview-cost-sub"),
-        ("Coding Time", fmt_duration(waka.get("total_seconds", 0)), "Total coding hours", "overview-coding-time", "overview-coding-sub"),
+        ("Total Tokens", fmt_tokens(grand_tokens), f"Hermes {fmt_tokens(hermes_tokens)} + WakaTime {fmt_tokens(waka_tokens)}", "overview-total-tokens", None, None),
+        ("Total Cost", f"${combined_total:.2f}", combined_sub_text, "overview-total-cost", "overview-cost-combined", combined_sub_args),
+        ("Coding Time", fmt_duration(waka.get("total_seconds", 0)), "Total coding hours", "overview-coding-time", "overview-coding-sub", None),
     ]
 
-    # Provider cost bars
+    # Provider cost bars (AI only)
     provider_bars = ""
-    if grand_cost.get("by_provider"):
-        max_cost = max(v["cost_usd"] for v in grand_cost["by_provider"].values())
-        for provider, data in sorted(grand_cost["by_provider"].items(), key=lambda x: -x[1]["cost_usd"]):
+    if ai_cost.get("by_provider"):
+        max_cost = max(v["cost_usd"] for v in ai_cost["by_provider"].values())
+        for provider, data in sorted(ai_cost["by_provider"].items(), key=lambda x: -x[1]["cost_usd"]):
             pct = (data["cost_usd"] / max_cost) * 100
             provider_bars += f"""      <div class="bar-row">
         <span class="bar-label">{provider.title()}</span>
@@ -66,13 +73,31 @@ def generate():
       </div>
 """
 
-    # Monthly cost table (only Month + Cost)
+    # Monthly cost table (AI only)
     month_rows = ""
-    if grand_cost.get("by_month"):
-        for month, data in sorted(grand_cost["by_month"].items(), reverse=True):
+    if ai_cost.get("by_month"):
+        for month, data in sorted(ai_cost["by_month"].items(), reverse=True):
             month_rows += f"""      <tr>
         <td>{month}</td>
         <td>${data['cost_usd']:.2f}</td>
+      </tr>
+"""
+
+    # Service costs table — Service | Monthly Cost (latest month) | Total
+    service_rows = ""
+    svc_months_sorted = sorted(svc_cost.get("by_month", {}).keys(), reverse=True)
+    latest_svc_month = svc_months_sorted[0] if svc_months_sorted else None
+    if svc_cost.get("by_service"):
+        for service, sdata in sorted(svc_cost["by_service"].items(), key=lambda x: -x[1]["cost_usd"]):
+            latest_month_cost = 0.0
+            if latest_svc_month:
+                for entry in sdata["entries"]:
+                    if entry["month"] == latest_svc_month:
+                        latest_month_cost += entry["cost_usd"]
+            service_rows += f"""      <tr>
+        <td>{service.title()}</td>
+        <td>${latest_month_cost:.2f}</td>
+        <td>${sdata['cost_usd']:.2f}</td>
       </tr>
 """
 
@@ -275,8 +300,11 @@ def generate():
   <div class="stats-grid">
 """
 
-    for label, value, sub, label_key, sub_key in stat_cards:
+    for label, value, sub, label_key, sub_key, sub_args in stat_cards:
         sub_attr = f' data-i18n="{sub_key}"' if sub_key else ''
+        if sub_args is not None:
+            import json as _json
+            sub_attr += f' data-i18n-args=\'{_json.dumps(sub_args)}\''
         html += f"""    <div class="stat-card">
       <div class="num">{value}</div>
       <div class="lbl" data-i18n="{label_key}">{label}</div>
@@ -303,6 +331,21 @@ def generate():
       </thead>
       <tbody>
 {month_rows}      </tbody>
+    </table>
+  </div>
+"""
+
+    # Service Costs section
+    if service_rows:
+        html += f"""  <div class="section">
+    <div class="section-title" data-i18n="overview-service-costs">Service Costs</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" data-i18n="overview-service-costs-desc">Infrastructure &amp; hosting services</p>
+    <table class="cost-table">
+      <thead>
+        <tr><th data-i18n="stat-service">Service</th><th data-i18n="stat-monthly-cost">Monthly Cost</th><th data-i18n="stat-total">Total</th></tr>
+      </thead>
+      <tbody>
+{service_rows}      </tbody>
     </table>
   </div>
 """

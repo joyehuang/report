@@ -198,9 +198,9 @@
       <div class="sub">Hermes 3.9M + WakaTime 198.6M</div>
     </div>
     <div class="stat-card">
-      <div class="num">$280.58</div>
+      <div class="num">$440.58</div>
       <div class="lbl" data-i18n="overview-total-cost">Total Cost</div>
-      <div class="sub" data-i18n="overview-cost-sub">USD spent on AI</div>
+      <div class="sub" data-i18n="overview-cost-combined" data-i18n-args='["281", "160"]'>AI $281 + Services $160</div>
     </div>
     <div class="stat-card">
       <div class="num">41h 22m</div>
@@ -263,10 +263,41 @@
     </table>
   </div>
   <div class="section">
+    <div class="section-title" data-i18n="overview-service-costs">Service Costs</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" data-i18n="overview-service-costs-desc">Infrastructure &amp; hosting services</p>
+    <table class="cost-table">
+      <thead>
+        <tr><th data-i18n="stat-service">Service</th><th data-i18n="stat-monthly-cost">Monthly Cost</th><th data-i18n="stat-total">Total</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Aws</td>
+        <td>$50.00</td>
+        <td>$100.00</td>
+      </tr>
+      <tr>
+        <td>Vercel</td>
+        <td>$20.00</td>
+        <td>$40.00</td>
+      </tr>
+      <tr>
+        <td>Cloudflare</td>
+        <td>$10.00</td>
+        <td>$20.00</td>
+      </tr>
+      <tr>
+        <td>Typeless</td>
+        <td>$0.00</td>
+        <td>$0.00</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="section">
     <div class="section-title" data-i18n="overview-cache-section-title">Hermes Agent Cache</div>
     <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 0;">
       <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">70.1M</div>
+        <div class="num">71.6M</div>
         <div class="lbl" data-i18n="stat-cache-read">Cache Read</div>
       </div>
       <div class="stat-card" style="border: none; padding: 16px;">
@@ -274,7 +305,7 @@
         <div class="lbl" data-i18n="stat-cache-write">Cache Write</div>
       </div>
       <div class="stat-card" style="border: none; padding: 16px;">
-        <div class="num">95.3%</div>
+        <div class="num">95.4%</div>
         <div class="lbl" data-i18n="stat-hit-ratio">Hit Ratio</div>
       </div>
     </div>

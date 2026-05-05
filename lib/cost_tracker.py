@@ -11,8 +11,16 @@ COSTS_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 def _load() -> dict:
     if os.path.exists(COSTS_FILE):
         with open(COSTS_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {"bills": [], "total_usd": 0.0}
+            data = json.load(f)
+    else:
+        data = {}
+    data.setdefault("bills", [])
+    data.setdefault("services", [])
+    # Migrate legacy total_usd → total_ai_usd
+    if "total_ai_usd" not in data:
+        data["total_ai_usd"] = data.pop("total_usd", 0.0)
+    data.setdefault("total_services_usd", 0.0)
+    return data
 
 
 def _save(data: dict):
@@ -57,30 +65,82 @@ def add_bill(date: str, provider: str, cost: float, currency: str = "USD", note:
     }
     data["bills"].append(entry)
     data["bills"].sort(key=lambda x: x["date"])
-    data["total_usd"] = round(sum(b["cost_usd"] for b in data["bills"]), 2)
+    data["total_ai_usd"] = round(sum(b["cost_usd"] for b in data["bills"]), 2)
+    _save(data)
+    return entry
+
+
+def add_service_cost(service: str, cost_usd: float, month: str, note: str = "") -> dict:
+    """Add a non-AI infrastructure service cost entry.
+
+    Args:
+        service: e.g., "aws", "vercel", "cloudflare", "typeless"
+        cost_usd: cost in USD
+        month: YYYY-MM
+        note: optional note
+    """
+    data = _load()
+    entry = {
+        "service": service.lower().strip(),
+        "cost_usd": round(cost_usd, 2),
+        "month": month,
+        "note": note,
+        "added_at": int(time.time()),
+    }
+    data["services"].append(entry)
+    data["services"].sort(key=lambda x: (x["month"], x["service"]))
+    data["total_services_usd"] = round(sum(s["cost_usd"] for s in data["services"]), 2)
     _save(data)
     return entry
 
 
 def get_summary() -> dict:
-    """Return cost summary grouped by month and provider."""
+    """Return combined AI + service cost summary."""
     data = _load()
-    by_month = {}
-    by_provider = {}
+
+    # AI costs (from bills)
+    ai_by_month = {}
+    ai_by_provider = {}
     for b in data["bills"]:
         month = b["date"][:7]  # YYYY-MM
-        by_month.setdefault(month, {"cost_usd": 0.0, "entries": []})
-        by_month[month]["cost_usd"] += b["cost_usd"]
-        by_month[month]["entries"].append(b)
-        
-        by_provider.setdefault(b["provider"], {"cost_usd": 0.0, "count": 0})
-        by_provider[b["provider"]]["cost_usd"] += b["cost_usd"]
-        by_provider[b["provider"]]["count"] += 1
+        ai_by_month.setdefault(month, {"cost_usd": 0.0, "entries": []})
+        ai_by_month[month]["cost_usd"] += b["cost_usd"]
+        ai_by_month[month]["entries"].append(b)
+
+        ai_by_provider.setdefault(b["provider"], {"cost_usd": 0.0, "count": 0})
+        ai_by_provider[b["provider"]]["cost_usd"] += b["cost_usd"]
+        ai_by_provider[b["provider"]]["count"] += 1
+
+    # Service costs
+    svc_by_month = {}
+    svc_by_service = {}
+    for s in data["services"]:
+        month = s["month"]
+        svc_by_month.setdefault(month, {"cost_usd": 0.0, "entries": []})
+        svc_by_month[month]["cost_usd"] += s["cost_usd"]
+        svc_by_month[month]["entries"].append(s)
+
+        svc_by_service.setdefault(s["service"], {"cost_usd": 0.0, "entries": []})
+        svc_by_service[s["service"]]["cost_usd"] += s["cost_usd"]
+        svc_by_service[s["service"]]["entries"].append(s)
+
+    ai_total = data["total_ai_usd"]
+    svc_total = data["total_services_usd"]
+
     return {
-        "total_usd": data["total_usd"],
-        "bills": data["bills"],
-        "by_month": {k: {"cost_usd": round(v["cost_usd"], 2), "entries": v["entries"]} for k, v in by_month.items()},
-        "by_provider": {k: {"cost_usd": round(v["cost_usd"], 2), "count": v["count"]} for k, v in by_provider.items()},
+        "ai": {
+            "total_usd": ai_total,
+            "bills": data["bills"],
+            "by_month": {k: {"cost_usd": round(v["cost_usd"], 2), "entries": v["entries"]} for k, v in ai_by_month.items()},
+            "by_provider": {k: {"cost_usd": round(v["cost_usd"], 2), "count": v["count"]} for k, v in ai_by_provider.items()},
+        },
+        "services": {
+            "total_usd": svc_total,
+            "entries": data["services"],
+            "by_month": {k: {"cost_usd": round(v["cost_usd"], 2), "entries": v["entries"]} for k, v in svc_by_month.items()},
+            "by_service": {k: {"cost_usd": round(v["cost_usd"], 2), "entries": v["entries"]} for k, v in svc_by_service.items()},
+        },
+        "combined_total": round(ai_total + svc_total, 2),
     }
 
 

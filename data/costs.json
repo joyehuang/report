@@ -101,5 +101,64 @@
       "added_at": 1777907119
     }
   ],
-  "total_usd": 280.58
+  "total_ai_usd": 280.58,
+  "services": [
+    {
+      "service": "aws",
+      "cost_usd": 50.0,
+      "month": "2026-04",
+      "note": "EC2 + RDS",
+      "added_at": 1777907119
+    },
+    {
+      "service": "vercel",
+      "cost_usd": 20.0,
+      "month": "2026-04",
+      "note": "Pro plan",
+      "added_at": 1777907119
+    },
+    {
+      "service": "cloudflare",
+      "cost_usd": 10.0,
+      "month": "2026-04",
+      "note": "DNS + CDN",
+      "added_at": 1777907119
+    },
+    {
+      "service": "typeless",
+      "cost_usd": 0.0,
+      "month": "2026-04",
+      "note": "free tier",
+      "added_at": 1777907119
+    },
+    {
+      "service": "aws",
+      "cost_usd": 50.0,
+      "month": "2026-05",
+      "note": "EC2 + RDS",
+      "added_at": 1777907119
+    },
+    {
+      "service": "vercel",
+      "cost_usd": 20.0,
+      "month": "2026-05",
+      "note": "Pro plan",
+      "added_at": 1777907119
+    },
+    {
+      "service": "cloudflare",
+      "cost_usd": 10.0,
+      "month": "2026-05",
+      "note": "DNS + CDN",
+      "added_at": 1777907119
+    },
+    {
+      "service": "typeless",
+      "cost_usd": 0.0,
+      "month": "2026-05",
+      "note": "free tier",
+      "added_at": 1777907119
+    }
+  ],
+  "total_services_usd": 160.0
 }

@@ -182,7 +182,7 @@ def generate():
       <div class="title" data-i18n="index-overview-card-title">AI Usage Overview</div>
       <div class="featured-stats">
         <div class="stat">
-          <div class="num">${cost['total_usd']:.0f}</div>
+          <div class="num">${cost['combined_total']:.0f}</div>
           <div class="lbl" data-i18n="stat-cost">Cost</div>
         </div>
         <div class="stat">

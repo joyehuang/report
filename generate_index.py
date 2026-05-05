@@ -277,7 +277,7 @@ def generate():
         total_cache = row[2] or 0
         session_cache_card = f"""    <a class="featured-card" href="archive/cache.html">
       <div class="date">Prompt Caching</div>
-      <div class="title">Cache Analysis</div>
+      <div class="title" data-i18n="index-featured-cache">Cache Analysis</div>
       <div class="featured-stats">
         <div class="stat">
           <div class="num">{sess_cnt}</div>
@@ -677,15 +677,18 @@ def generate():
 <div class="container">
 
   <div class="top-bar">
-    <div class="brand">joyehuang.me</div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-      <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      <svg id="sunIcon" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <div class="brand"><a href="https://joyehuang.me" data-i18n="footer-joye">joyehuang.me</a></div>
+    <div class="top-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg id="moonIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg id="sunIcon" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
     </button>
+    </div>
   </div>
 
   <header class="site-header">
-    <h1>AI <span>Usage</span> Report</h1>
+    <h1 data-i18n="index-title">AI <span data-i18n="index-title-usage">Usage</span> Report</h1>
     <p class="subtitle">Daily insights from AI-assisted workflows. Hermes Agent sessions + WakaTime coding data.</p>
     <div class="nav-links">
       <a href="https://joyehuang.me" target="_blank">
@@ -738,7 +741,7 @@ def generate():
   </section>
 
   <footer class="footer">
-    <a href="https://joyehuang.me" target="_blank">joyehuang.me</a> ·
+    <a href="https://joyehuang.me" target="_blank" data-i18n="footer-joye">joyehuang.me</a> ·
     <a href="https://github.com/joyehuang" target="_blank">GitHub</a> ·
     <a href="https://github.com/joyehuang/report" target="_blank">Source</a>
   </footer>
@@ -776,6 +779,7 @@ def generate():
 }})();
 </script>
 
+<script src="assets/i18n.js"></script>
 </body>
 </html>"""
 

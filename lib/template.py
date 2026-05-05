@@ -369,5 +369,5 @@ def render_receipt(**data):
 }})();
 </script>
 
-</body>
+<script src="../assets/i18n.js"></script>\n</body>
 </html>"""

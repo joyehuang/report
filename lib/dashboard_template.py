@@ -464,10 +464,13 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
         <svg class="icon" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
         {date_range}
       </div>
+      <div class="top-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode" title="Toggle theme">
         <svg class="icon moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg class="icon sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
       </button>
+    </div>
     </div>
   </div>
 
@@ -601,5 +604,6 @@ def render_dashboard(date_range, ai_driven_pct, ai_additions, human_additions,
 }})();
 </script>
 
+<script src="../assets/i18n.js"></script>
 </body>
 </html>"""

@@ -270,85 +270,88 @@
 
 <div class="page">
   <div class="top-bar">
-    <div class="brand"><a href="../index.html">← AI Usage Report</a></div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <div class="brand"><a href="../index.html" data-i18n="back-home">← AI Usage Report</a></div>
+    <div class="top-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
       <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
     </button>
+    </div>
   </div>
 
   <div class="header">
-    <h1>Cache <span>Analysis</span></h1>
-    <p class="meta">Hermes Agent prompt caching — model-level overview &amp; per-session breakdown</p>
+    <h1 data-i18n="cache-title">Cache <span data-i18n="cache-title-accent">Analysis</span></h1>
+    <p class="meta" data-i18n="cache-desc">Hermes Agent prompt caching — model-level overview &amp; per-session breakdown</p>
   </div>
 
   <div class="hero-grid">
     <div class="hero">
-      <div class="big">94.5%</div>
-      <div class="lbl">Overall Cache Hit Ratio</div>
-      <div class="sub">58.1M cached / 61.5M total prompt tokens</div>
+      <div class="big">94.9%</div>
+      <div class="lbl" data-i18n="cache-overall-label">Overall Cache Hit Ratio</div>
+      <div class="sub">63.5M cached / 66.9M total prompt tokens</div>
     </div>
     <div class="hero">
-      <div class="big">74.2%</div>
-      <div class="lbl">Average Session Hit Ratio</div>
-      <div class="sub">26 sessions · overall 94.5%</div>
+      <div class="big">74.4%</div>
+      <div class="lbl" data-i18n="cache-avg-label">Average Session Hit Ratio</div>
+      <div class="sub">26 sessions · overall 94.9%</div>
     </div>
   </div>
 
   <div class="grid-3">
     <div class="mini-card">
-      <div class="num">58.1M</div>
-      <div class="lbl">Cache Read</div>
+      <div class="num">63.5M</div>
+      <div class="lbl" data-i18n="cache-read">Cache Read</div>
     </div>
     <div class="mini-card">
       <div class="num">0</div>
-      <div class="lbl">Cache Write</div>
+      <div class="lbl" data-i18n="cache-write">Cache Write</div>
     </div>
     <div class="mini-card">
       <div class="num">3.4M</div>
-      <div class="lbl">Fresh Input</div>
+      <div class="lbl" data-i18n="fresh-input">Fresh Input</div>
     </div>
   </div>
 
   <div class="insight">
-    <strong>关于 Cache Hit Ratio</strong><br>
-    Prompt caching 通过重用已有上下文来减少 token 消耗。当 <strong>cache_read</strong> 越高，说明越多上下文被重用，hit ratio 越高，成本越低。<br>
-    目前数据主要来自 Kimi API，其 OpenAI 兼容接口仅返回 <code>cached_tokens</code> 而不含 <code>cache_write_tokens</code>，因此 Cache Write 显示为 0。若使用 Anthropic API，则会同时记录 <code>cache_creation_input_tokens</code>。
+    <strong data-i18n="cache-insight-title">About Cache Hit Ratio</strong><br>
+    <span data-i18n="cache-insight-body-1">Prompt caching reduces token consumption by reusing previously computed context. A higher <strong>cache_read</strong> means more context reuse, leading to a higher hit ratio and lower costs.</span><br>
+    <span data-i18n="cache-insight-body-2">Current data is primarily from the Kimi API, whose OpenAI-compatible interface returns <code>cached_tokens</code> but not <code>cache_write_tokens</code> — hence Cache Write shows as 0. The Anthropic API does report <code>cache_creation_input_tokens</code> separately.</span>
   </div>
 
   <div class="section">
-    <div class="section-title">Cache Hit Ratio by Model</div>
+    <div class="section-title" data-i18n="cache-section-model">Cache Hit Ratio by Model</div>
       <div class="bar-row">
         <span class="bar-label"><code>kimi-k2.6</code></span>
-        <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:96%"></div></div>
         <span class="bar-value">94.6%</span>
       </div>
       <div class="bar-row">
         <span class="bar-label"><code>deepseek-v4-pro</code></span>
-        <div class="bar-track"><div class="bar-fill" style="width:97%"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:93%"></div></div>
         <span class="bar-value">91.3%</span>
       </div>
       <div class="bar-row">
         <span class="bar-label"><code>deepseek-v4-flash</code></span>
-        <div class="bar-track"><div class="bar-fill" style="width:99%"></div></div>
-        <span class="bar-value">93.6%</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        <span class="bar-value">98.5%</span>
       </div>
 
   </div>
 
   <div class="section">
-    <div class="section-title">Model Breakdown</div>
+    <div class="section-title" data-i18n="cache-section-model-table">Model Breakdown</div>
     <div class="table-wrap">
       <table class="data-table" id="modelTable">
         <thead>
           <tr>
-            <th>Model</th>
-            <th>Sessions</th>
-            <th>Input</th>
-            <th>Cache Read</th>
-            <th>Cache Write</th>
-            <th>Output</th>
-            <th>Hit Ratio</th>
+            <th data-i18n="th-model">Model</th>
+            <th data-i18n="th-sessions">Sessions</th>
+            <th data-i18n="th-input">Input</th>
+            <th data-i18n="th-cache-read">Cache Read</th>
+            <th data-i18n="th-cache-write">Cache Write</th>
+            <th data-i18n="th-output">Output</th>
+            <th data-i18n="th-hit-ratio">Hit Ratio</th>
           </tr>
         </thead>
         <tbody>
@@ -373,11 +376,11 @@
       <tr>
         <td><code>deepseek-v4-flash</code></td>
         <td>1</td>
-        <td>66.6K</td>
-        <td>975.4K</td>
+        <td>93.9K</td>
+        <td>6.4M</td>
         <td>0</td>
-        <td>11.2K</td>
-        <td><span class="ratio">93.6%</span></td>
+        <td>43.0K</td>
+        <td><span class="ratio">98.5%</span></td>
       </tr>
         </tbody>
       </table>
@@ -385,32 +388,32 @@
   </div>
 
   <div class="section">
-    <div class="section-title">All Sessions</div>
+    <div class="section-title" data-i18n="cache-section-sessions">All Sessions</div>
     <div class="filter-bar"><button class="filter-btn active" data-model="all">All</button><button class="filter-btn" data-model="deepseek-v4-flash">deepseek-v4-flash</button><button class="filter-btn" data-model="deepseek-v4-pro">deepseek-v4-pro</button><button class="filter-btn" data-model="kimi-k2.6">kimi-k2.6</button><button class="filter-btn" data-model="unknown">unknown</button></div>
     <div class="table-wrap">
       <table class="data-table" id="sessionTable">
         <thead>
           <tr>
-            <th>Started (Melb)</th>
-            <th>Model</th>
-            <th>Input</th>
-            <th>Cache Read</th>
-            <th>Cache Write</th>
-            <th>Output</th>
-            <th>Hit Ratio</th>
-            <th>Msgs</th>
+            <th data-i18n="th-started">Started (Melb)</th>
+            <th data-i18n="th-model">Model</th>
+            <th data-i18n="th-input">Input</th>
+            <th data-i18n="th-cache-read">Cache Read</th>
+            <th data-i18n="th-cache-write">Cache Write</th>
+            <th data-i18n="th-output">Output</th>
+            <th data-i18n="th-hit-ratio">Hit Ratio</th>
+            <th data-i18n="th-msgs">Msgs</th>
           </tr>
         </thead>
         <tbody id="sessionsBody">
       <tr data-model="deepseek-v4-flash" title="20260505_143256_2054542a">
         <td data-label="Started">2026-05-05 14:32</td>
         <td data-label="Model"><code>deepseek-v4-flash</code></td>
-        <td data-label="Input">66.6K</td>
-        <td data-label="Cache Read">975.4K</td>
+        <td data-label="Input">93.9K</td>
+        <td data-label="Cache Read">6.4M</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">11.2K</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-good">93.6%</span></td>
-        <td data-label="Msgs">16</td>
+        <td data-label="Output">43.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">98.5%</span></td>
+        <td data-label="Msgs">83</td>
       </tr>
       <tr data-model="kimi-k2.6" title="cron_54b5b4eaa3d3_20260505_080005">
         <td data-label="Started">2026-05-05 08:00</td>
@@ -664,7 +667,7 @@
       </tr>
         </tbody>
       </table>
-      <div class="empty" id="emptyMsg" style="display:none">No sessions match this filter.</div>
+      <div class="empty" id="emptyMsg" style="display:none"><span data-i18n="cache-filter-empty">No sessions match this filter.</span></div>
     </div>
   </div>
 
@@ -708,5 +711,6 @@
 })();
 </script>
 
+<script src="../assets/i18n.js"></script>
 </body>
 </html>

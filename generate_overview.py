@@ -247,11 +247,14 @@ def generate():
 
 <div class="page">
   <div class="top-bar">
-    <div class="brand"><a href="./index.html">← AI Usage Report</a></div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <div class="brand"><a href="./index.html" data-i18n="back-home">← AI Usage Report</a></div>
+    <div class="top-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
       <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
     </button>
+    </div>
   </div>
 
   <div class="header">
@@ -273,7 +276,7 @@ def generate():
     html += f"""  </div>
 
   <div class="section">
-    <div class="section-title">Cost by Provider</div>
+    <div class="section-title" data-i18n="overview-cost-provider">Cost by Provider</div>
 {provider_bars or '    <p style="color:var(--text-muted);font-size:13px;">No cost data yet.</p>'}
   </div>
 
@@ -281,10 +284,10 @@ def generate():
 
     if month_rows:
         html += f"""  <div class="section">
-    <div class="section-title">Monthly Cost</div>
+    <div class="section-title" data-i18n="overview-monthly-cost">Monthly Cost</div>
     <table class="cost-table">
       <thead>
-        <tr><th>Month</th><th>Cost</th></tr>
+        <tr><th data-i18n="overview-month">Month</th><th data-i18n="overview-cost">Cost</th></tr>
       </thead>
       <tbody>
 {month_rows}      </tbody>
@@ -310,14 +313,14 @@ def generate():
       </div>
     </div>
     <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">
-      <a href="cache.html" style="color: var(--accent); text-decoration: none;">→ View cache analysis</a>
+      <a href="cache.html" style="color: var(--accent); text-decoration: none;"><span data-i18n="overview-cache-link">→ View cache analysis</span></a>
     </p>
   </div>
 """
 
     html += f"""
   <div class="footer">
-    <a href="https://joyehuang.me" target="_blank">joyehuang.me</a> ·
+    <a href="https://joyehuang.me" target="_blank" data-i18n="footer-joye">joyehuang.me</a> ·
     <a href="https://github.com/joyehuang" target="_blank">GitHub</a> ·
     <a href="https://github.com/joyehuang/report" target="_blank">Source</a>
   </div>
@@ -337,6 +340,7 @@ def generate():
 }})();
 </script>
 
+<script src="assets/i18n.js"></script>
 </body>
 </html>"""
 

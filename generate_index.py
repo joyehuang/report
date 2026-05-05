@@ -128,6 +128,32 @@ def get_archive_list():
     return items
 
 
+def get_dashboard_archive_list():
+    """List all AI Overview dashboard files for the archive section."""
+    files = [f for f in os.listdir(ARCHIVE_DIR) if f.startswith("ai-overview-") and f.endswith(".json")]
+    files.sort(reverse=True)
+    items = []
+    import json
+    for f in files[:20]:
+        date_str = f.replace("ai-overview-", "").replace(".json", "")
+        filepath = os.path.join(ARCHIVE_DIR, f)
+        try:
+            with open(filepath, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except Exception:
+            continue
+        week_range = data.get("date_range", date_str)
+        coding_time = data.get("coding_time", "")
+        tokens_total = data.get("tokens_total", "")
+        items.append({
+            "href": f"archive/{f.replace('.json', '.html')}",
+            "date": date_str,
+            "title": f"AI Overview — {week_range}",
+            "meta": f"{coding_time} · {tokens_total} tokens",
+        })
+    return items
+
+
 def generate():
     # First regenerate the overview page
     try:
@@ -230,10 +256,23 @@ def generate():
     else:
         dashboard_card = '<div class="featured-card"><div class="title">AI Overview — no data</div></div>'
 
-    # Build archive grid
+    # Build archive grids
+    archive_items = get_archive_list()
     archive_grid = ""
     for item in archive_items:
         archive_grid += f"""      <a class="archive-item" href="{item['href']}">
+        <div class="arc-date">{item['date']}</div>
+        <div class="arc-title">{item['title']}</div>
+        <div class="arc-meta">
+          <span>{item['meta']}</span>
+        </div>
+      </a>
+"""
+
+    dashboard_archive_items = get_dashboard_archive_list()
+    dashboard_archive_grid = ""
+    for item in dashboard_archive_items:
+        dashboard_archive_grid += f"""      <a class="archive-item" href="{item['href']}">
         <div class="arc-date">{item['date']}</div>
         <div class="arc-title">{item['title']}</div>
         <div class="arc-meta">
@@ -633,11 +672,20 @@ def generate():
 
   <section class="archive">
     <div class="archive-header">
-      <h2>Archive</h2>
+      <h2>Daily Receipt Archive</h2>
       <span class="archive-count">{len(archive_items)} reports</span>
     </div>
     <div class="archive-grid">
 {archive_grid}    </div>
+  </section>
+
+  <section class="archive">
+    <div class="archive-header">
+      <h2>AI Overview Archive</h2>
+      <span class="archive-count">{len(dashboard_archive_items)} weeks</span>
+    </div>
+    <div class="archive-grid">
+{dashboard_archive_grid}    </div>
   </section>
 
   <footer class="footer">

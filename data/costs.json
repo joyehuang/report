@@ -117,7 +117,7 @@
       "cost_original": 100,
       "currency": "CNY",
       "cost_usd": 13.8,
-      "note": "Kimi \u5145\u503c",
+      "note": "Kimi 充值",
       "added_at": 1777907119
     },
     {
@@ -127,7 +127,7 @@
       "cost_original": 20,
       "currency": "USD",
       "cost_usd": 20.0,
-      "note": "ChatGPT Plus (\u53e6\u4e00\u8d26\u6237)",
+      "note": "ChatGPT Plus (另一账户)",
       "added_at": 1777907119
     },
     {
@@ -137,7 +137,7 @@
       "cost_original": 10,
       "currency": "USD",
       "cost_usd": 10.0,
-      "note": "Lite \u5957\u9910",
+      "note": "Lite 套餐",
       "added_at": 1777907119
     },
     {
@@ -147,7 +147,7 @@
       "cost_original": 34,
       "currency": "AUD",
       "cost_usd": 21.76,
-      "note": "Claude Pro \u8ba2\u9605",
+      "note": "Claude Pro 订阅",
       "added_at": 1777907119
     },
     {
@@ -177,7 +177,7 @@
       "cost_original": 147.6,
       "currency": "AUD",
       "cost_usd": 94.46,
-      "note": "Claude Max \u8ba2\u9605",
+      "note": "Claude Max 订阅",
       "added_at": 1777907119
     },
     {
@@ -197,7 +197,7 @@
       "cost_original": 100,
       "currency": "CNY",
       "cost_usd": 13.8,
-      "note": "DeepSeek \u5145\u503c",
+      "note": "DeepSeek 充值",
       "added_at": 1777907119
     },
     {
@@ -207,7 +207,7 @@
       "cost_original": 200,
       "currency": "CNY",
       "cost_usd": 27.6,
-      "note": "Kimi \u5145\u503c",
+      "note": "Kimi 充值",
       "added_at": 1777907119
     }
   ],
@@ -261,7 +261,35 @@
       "month": "2026-04",
       "note": "Pro plan subscription",
       "added_at": 1777907119
+    },
+    {
+      "service": "aws",
+      "cost_usd": 25.69,
+      "month": "2026-02",
+      "note": "AWS 0201 (35.57 AUD @ 0.7223)",
+      "added_at": 1778045583
+    },
+    {
+      "service": "aws",
+      "cost_usd": 22.31,
+      "month": "2026-03",
+      "note": "AWS 0301 (30.89 AUD @ 0.7223)",
+      "added_at": 1778045583
+    },
+    {
+      "service": "aws",
+      "cost_usd": 31.25,
+      "month": "2026-04",
+      "note": "AWS 0401 (43.26 AUD @ 0.7223)",
+      "added_at": 1778045583
+    },
+    {
+      "service": "aws",
+      "cost_usd": 30.03,
+      "month": "2026-05",
+      "note": "AWS 0501 (41.57 AUD @ 0.7223)",
+      "added_at": 1778045583
     }
   ],
-  "total_services_usd": 175.56
+  "total_services_usd": 284.84
 }

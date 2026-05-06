@@ -292,20 +292,20 @@
 
   <div class="hero-grid">
     <div class="hero">
-      <div class="big">95.3%</div>
+      <div class="big">95.4%</div>
       <div class="lbl" data-i18n="cache-overall-label">Overall Cache Hit Ratio</div>
-      <div class="sub">70.1M cached / 73.5M total prompt tokens</div>
+      <div class="sub">92.8M cached / 97.3M total prompt tokens</div>
     </div>
     <div class="hero">
-      <div class="big">74.4%</div>
+      <div class="big">76.2%</div>
       <div class="lbl" data-i18n="cache-avg-label">Average Session Hit Ratio</div>
-      <div class="sub">26 sessions · overall 95.3%</div>
+      <div class="sub">31 sessions · overall 95.4%</div>
     </div>
   </div>
 
   <div class="grid-3">
     <div class="mini-card">
-      <div class="num">70.1M</div>
+      <div class="num">92.8M</div>
       <div class="lbl" data-i18n="cache-read">Cache Read</div>
     </div>
     <div class="mini-card">
@@ -313,7 +313,7 @@
       <div class="lbl" data-i18n="cache-write">Cache Write</div>
     </div>
     <div class="mini-card">
-      <div class="num">3.4M</div>
+      <div class="num">4.5M</div>
       <div class="lbl" data-i18n="fresh-input">Fresh Input</div>
     </div>
   </div>
@@ -328,18 +328,18 @@
     <div class="section-title" data-i18n="cache-section-model">Cache Hit Ratio by Model</div>
       <div class="bar-row">
         <span class="bar-label"><code>kimi-k2.6</code></span>
-        <div class="bar-track"><div class="bar-fill" style="width:96%"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:98%"></div></div>
         <span class="bar-value">94.6%</span>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label"><code>deepseek-v4-pro</code></span>
-        <div class="bar-track"><div class="bar-fill" style="width:92%"></div></div>
-        <span class="bar-value">91.3%</span>
       </div>
       <div class="bar-row">
         <span class="bar-label"><code>deepseek-v4-flash</code></span>
         <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
-        <span class="bar-value">99.0%</span>
+        <span class="bar-value">96.8%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label"><code>deepseek-v4-pro</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:94%"></div></div>
+        <span class="bar-value">91.3%</span>
       </div>
 
   </div>
@@ -362,15 +362,65 @@
           </tr>
         </thead>
         <tbody id="sessionsBody">
+      <tr data-model="deepseek-v4-flash" title="20260506_150211_4932c8bc">
+        <td data-label="Started">2026-05-06 15:02</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">55.6K</td>
+        <td data-label="Cache Read">2.5M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">21.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">97.8%</span></td>
+        <td data-label="Msgs">116</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_54b5b4eaa3d3_20260506_142926">
+        <td data-label="Started">2026-05-06 14:29</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">14.9K</td>
+        <td data-label="Cache Read">155.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">4.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">91.3%</span></td>
+        <td data-label="Msgs">38</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="20260506_140254_1de085">
+        <td data-label="Started">2026-05-06 14:02</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">11.9K</td>
+        <td data-label="Cache Read">57.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">82.8%</span></td>
+        <td data-label="Msgs">22</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="20260506_121547_2f8651cb">
+        <td data-label="Started">2026-05-06 12:15</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">912.4K</td>
+        <td data-label="Cache Read">9.2M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">26.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.9%</span></td>
+        <td data-label="Msgs">234</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_54b5b4eaa3d3_20260506_080013">
+        <td data-label="Started">2026-05-06 08:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">2.7K</td>
+        <td data-label="Cache Read">4.9K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">564</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">64.7%</span></td>
+        <td data-label="Msgs">7</td>
+      </tr>
       <tr data-model="deepseek-v4-flash" title="20260505_143256_2054542a">
         <td data-label="Started">2026-05-05 14:32</td>
         <td data-label="Model"><code>deepseek-v4-flash</code></td>
-        <td data-label="Input">134.2K</td>
-        <td data-label="Cache Read">12.9M</td>
+        <td data-label="Input">167.8K</td>
+        <td data-label="Cache Read">23.8M</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">56.8K</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-good">99.0%</span></td>
-        <td data-label="Msgs">239</td>
+        <td data-label="Output">77.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">99.3%</span></td>
+        <td data-label="Msgs">377</td>
       </tr>
       <tr data-model="kimi-k2.6" title="cron_54b5b4eaa3d3_20260505_080005">
         <td data-label="Started">2026-05-05 08:00</td>

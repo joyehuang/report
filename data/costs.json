@@ -289,7 +289,14 @@
       "month": "2026-05",
       "note": "AWS 0501 (41.57 AUD @ 0.7223)",
       "added_at": 1778045583
+    },
+    {
+      "service": "cloudflare",
+      "cost_usd": 85.76,
+      "month": "2026-03",
+      "note": "DNS + CDN - Mar",
+      "added_at": 1778045976
     }
   ],
-  "total_services_usd": 284.84
+  "total_services_usd": 370.6
 }

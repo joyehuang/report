@@ -59,8 +59,14 @@ def _extract_tool_name(tool_call_json) -> str:
     try:
         calls = json.loads(tool_call_json) if isinstance(tool_call_json, str) else tool_call_json
         if calls and len(calls) > 0:
+            # Prefer function.name when available (newer provider format)
+            if "function" in calls[0] and "name" in calls[0]["function"]:
+                return calls[0]["function"]["name"]
+            # Fallback to id field (toolname:0 format)
             call_id = calls[0].get("id", "")
-            return call_id.split(":")[0] if ":" in call_id else call_id
+            if ":" in call_id:
+                return call_id.split(":")[0]
+            return call_id
     except Exception:
         pass
     return ""

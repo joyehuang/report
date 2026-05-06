@@ -209,9 +209,39 @@
       "cost_usd": 27.6,
       "note": "Kimi 充值",
       "added_at": 1777907119
+    },
+    {
+      "date": "2024-02-13",
+      "date_raw": "240213",
+      "provider": "cursor",
+      "cost_original": 24.85,
+      "currency": "USD",
+      "cost_usd": 24.85,
+      "note": "Cursor - Feb",
+      "added_at": 1778046170
+    },
+    {
+      "date": "2024-02-08",
+      "date_raw": "240208",
+      "provider": "cursor",
+      "cost_original": 15.59,
+      "currency": "USD",
+      "cost_usd": 15.59,
+      "note": "Cursor - Feb (early)",
+      "added_at": 1778046170
+    },
+    {
+      "date": "2024-03-08",
+      "date_raw": "240308",
+      "provider": "cursor",
+      "cost_original": 2.21,
+      "currency": "USD",
+      "cost_usd": 2.21,
+      "note": "Cursor - Mar",
+      "added_at": 1778046170
     }
   ],
-  "total_ai_usd": 493.86,
+  "total_ai_usd": 536.51,
   "services": [
     {
       "service": "cloudflare",

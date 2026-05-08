@@ -614,6 +614,10 @@ def generate():
   .archive {{
     animation: fadeUp 0.8s ease 0.3s forwards;
     opacity: 0;
+    margin-bottom: 48px;
+  }}
+  .archive:last-of-type {{
+    margin-bottom: 0;
   }}
   .archive-header {{
     display: flex;

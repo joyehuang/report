@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joye's Hermes Agent Daily Receipt — May 31, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-body: hsl(240 20.54% 5.2%);
+    --bg-receipt: hsl(240 10% 3.9%);
+    --text-primary: hsl(0 0% 98%);
+    --text-secondary: hsl(240 5% 74.9%);
+    --text-muted: hsl(240 5% 50%);
+    --accent: hsl(195 95% 85%);
+    --border: hsl(240 3.7% 15.9%);
+    --border-dashed: hsl(240 3.7% 15.9%);
+    --card-bg: hsl(240 3.7% 15.9%);
+    --bar-bg: hsl(240 3.7% 15.9%);
+    --bar-fill: hsl(195 95% 85%);
+    --printer-led: hsl(142 60% 65%);
+    --toggle-bg: hsl(240 3.7% 15.9%);
+    --toggle-icon: hsl(0 0% 98%);
+  }
+
+  [data-theme="light"] {
+    --bg-body: hsl(210 33% 99%);
+    --bg-receipt: hsl(0 0% 100%);
+    --text-primary: hsl(240 10% 3.9%);
+    --text-secondary: hsl(240 3.8% 46.1%);
+    --text-muted: hsl(240 3.8% 46.1%);
+    --accent: hsl(200 29% 45%);
+    --border: hsl(240 5.9% 88%);
+    --border-dashed: hsl(240 5.9% 88%);
+    --card-bg: hsl(240 4.8% 95.9%);
+    --bar-bg: hsl(240 4.8% 95.9%);
+    --bar-fill: hsl(200 29% 45%);
+    --printer-led: hsl(142 50% 40%);
+    --toggle-bg: hsl(240 4.8% 95.9%);
+    --toggle-icon: hsl(240 10% 3.9%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    line-height: 1.5;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .receipt-wrapper { position: relative; width: 400px; }
+
+  /* Theme toggle — fixed bottom-right, matches report.joyehuang.me */
+  .theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--toggle-bg);
+    color: var(--toggle-icon);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    transform: scale(1.08);
+  }
+  .theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+  .theme-toggle .sun, [data-theme="light"] .theme-toggle .moon { display: none; }
+  [data-theme="light"] .theme-toggle .sun { display: block; }
+
+  .top-actions-fixed {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .lang-toggle {
+    width: 44px; height: 44px; border-radius: 12px;
+    border: 1px solid var(--border); background: var(--card-bg);
+    color: var(--text-primary); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 600; letter-spacing: 1px;
+    display: grid; place-items: center;
+    transition: all 0.2s ease; box-shadow: var(--shadow);
+  }
+  .lang-toggle:hover { transform: scale(1.08); border-color: var(--accent); }
+
+  .receipt {
+    background: var(--bg-receipt);
+    width: 400px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    animation: printReceipt 2.5s ease-out forwards;
+    transform-origin: top center;
+    clip-path: inset(0 0 100% 0);
+    border-radius: 2px;
+  }
+
+  @keyframes printReceipt {
+    0% { clip-path: inset(0 0 100% 0); }
+    100% { clip-path: inset(0 0 0% 0); }
+  }
+
+  .receipt::before, .receipt::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 10px;
+    background: radial-gradient(circle, transparent 6px, var(--bg-receipt) 6px);
+    background-size: 16px 16px;
+  }
+  .receipt::before { top: -5px; }
+  .receipt::after { bottom: -5px; transform: rotate(180deg); }
+
+  .printer-light {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--printer-led);
+    box-shadow: 0 0 8px var(--printer-led);
+    animation: blink 0.5s ease-in-out 5;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .header {
+    text-align: center;
+    border-bottom: 2px dashed var(--border-dashed);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+    animation-delay: 0.3s;
+  }
+  .header .logo { font-size: 20px; font-weight: 700; letter-spacing: 4px; margin-bottom: 4px; color: var(--text-primary); }
+  .header .subtitle { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
+  .header .date { font-size: 13px; font-weight: 600; margin-top: 8px; color: var(--accent); }
+  .header .joye { font-size: 10px; color: var(--text-muted); margin-top: 4px; letter-spacing: 1px; }
+
+  .section {
+    border-bottom: 1px dashed var(--border-dashed);
+    padding: 12px 0;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+  }
+  .section:nth-of-type(1) { animation-delay: 0.6s; }
+  .section:nth-of-type(2) { animation-delay: 0.9s; }
+  .section:nth-of-type(3) { animation-delay: 1.2s; }
+  .section:nth-of-type(4) { animation-delay: 1.5s; }
+  .section:nth-of-type(5) { animation-delay: 1.8s; }
+  .section:nth-of-type(6) { animation-delay: 2.1s; }
+  .section:last-child { border-bottom: none; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+
+  .row { display: flex; justify-content: space-between; font-size: 12px; margin: 3px 0; }
+  .row .label { color: var(--text-secondary); }
+  .row .value { font-weight: 600; color: var(--text-primary); }
+  .row .highlight { font-weight: 700; font-size: 13px; color: var(--accent); }
+
+  .big-number { font-size: 28px; font-weight: 700; text-align: center; margin: 8px 0 4px; color: var(--text-primary); }
+  .big-label { font-size: 10px; text-align: center; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
+
+  .token-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px;
+  }
+  .token-item {
+    text-align: center; padding: 8px 6px;
+    background: var(--card-bg); border-radius: 4px; border: 1px solid var(--border);
+  }
+  .token-item .num { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  .token-item .lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .model-bar { display: flex; align-items: center; margin: 4px 0; font-size: 11px; }
+  .model-name { width: 100px; font-weight: 600; color: var(--text-primary); }
+  .model-bar-fill { flex: 1; height: 14px; background: var(--bar-bg); border-radius: 2px; overflow: hidden; margin: 0 8px; }
+  .model-bar-inner { height: 100%; background: var(--bar-fill); border-radius: 2px; transition: width 1s ease; }
+  .model-count { width: 60px; text-align: right; font-size: 10px; color: var(--text-muted); }
+
+  .session-item { margin: 4px 0; font-size: 11px; }
+  .session-main { display: flex; justify-content: space-between; }
+  .session-time { font-weight: 600; color: var(--text-primary); }
+  .session-source { color: var(--text-muted); font-size: 10px; text-transform: uppercase; }
+  .session-title { color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .tool-name { font-weight: 600; color: var(--text-primary); }
+  .tool-count { color: var(--text-muted); font-size: 11px; }
+
+  .dash-line { border-top: 1px dashed var(--border-dashed); margin: 6px 0; }
+
+  .footer {
+    text-align: center; margin-top: 16px; padding-top: 12px;
+    border-top: 2px dashed var(--border-dashed); font-size: 10px; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); text-decoration: none; }
+  .footer a:hover { color: var(--accent); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 440px) { .receipt, .receipt-wrapper { width: 100%; } }
+</style>
+</head>
+<body>
+
+<div class="top-actions-fixed">
+  <button class="lang-toggle" id="langToggle" aria-label="Switch language">EN</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/></svg>
+  </button>
+</div>
+
+<div class="receipt-wrapper">
+  <div class="printer-light"></div>
+  <div class="receipt">
+    <div class="header">
+      <div class="logo" data-i18n="receipt-brand">HERMES AGENT</div>
+      <div class="subtitle" data-i18n="receipt-subtitle">HERMES AGENT DAILY RECEIPT</div>
+      <div class="date">May 31, 2026</div>
+      <div class="joye">joye @ joyehuang.me</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" data-i18n="receipt-section-overview">■ Overview</div>
+      <div class="big-number">65</div>
+      <div class="big-label" data-i18n="receipt-sessions-label">Sessions</div>
+      <div class="token-grid">
+        <div class="token-item">
+          <div class="num">590</div>
+          <div class="lbl" data-i18n="receipt-messages">Messages</div>
+        </div>
+        <div class="token-item">
+          <div class="num">249</div>
+          <div class="lbl" data-i18n="receipt-tool-calls">Tool Calls</div>
+        </div>
+        <div class="token-item">
+          <div class="num">872.5K</div>
+          <div class="lbl" data-i18n="receipt-total-tokens">Total Tokens</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" data-i18n="receipt-section-token">■ Token Usage</div>
+      <div class="row">
+        <span class="label" data-i18n="receipt-input-tokens">Input Tokens</span>
+        <span class="value highlight">796.8K</span>
+      </div>
+      <div class="row">
+        <span class="label" data-i18n="receipt-output-tokens">Output Tokens</span>
+        <span class="value highlight">75.7K</span>
+      </div>
+      <div class="dash-line"></div>
+      <div class="row">
+        <span class="label" data-i18n="receipt-total">TOTAL</span>
+        <span class="value highlight">872.5K</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" data-i18n="receipt-section-models">■ Models</div>
+      <div class="model-bar">
+        <span class="model-name">deepseek-v4-flash</span>
+        <div class="model-bar-fill"><div class="model-bar-inner" style="width:100%"></div></div>
+        <span class="model-count">65</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" data-i18n="receipt-section-platforms">■ Platforms</div>
+      <div class="row">
+        <span class="label">CRON</span>
+        <span class="value">65 <span data-i18n="receipt-sessions">sessions</span> / 590 <span data-i18n="receipt-messages">msgs</span></span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" data-i18n="receipt-section-sessions">■ Sessions</div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">4m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">1m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">2m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">3m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+      <div class="session-item">
+        <div class="session-main">
+          <span class="session-time">0m</span>
+          <span class="session-source">cron</span>
+        </div>
+        <div class="session-title">Untitled</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title" data-i18n="receipt-section-tools">■ Top Tools</div>
+      <div class="row">
+        <span class="tool-name">#1 terminal</span>
+        <span class="tool-count">150 <span data-i18n="receipt-tool-calls">calls</span></span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#2 read_file</span>
+        <span class="tool-count">59 <span data-i18n="receipt-tool-calls">calls</span></span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#3 execute_code</span>
+        <span class="tool-count">1 <span data-i18n="receipt-tool-calls">calls</span></span>
+      </div>
+      <div class="row">
+        <span class="tool-name">#4 write_file</span>
+        <span class="tool-count">1 <span data-i18n="receipt-tool-calls">calls</span></span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div><span data-i18n="receipt-generated">Generated by Hermes Agent</span> · 2026-05-31</div>
+      <div><a href="https://report.joyehuang.me">report.joyehuang.me</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('theme');
+  if (saved) root.dataset.theme = saved;
+  toggle.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+})();
+</script>
+
+<script src="../assets/i18n.js"></script>
+</body>
+</html>

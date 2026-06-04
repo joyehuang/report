@@ -292,20 +292,20 @@
 
   <div class="hero-grid">
     <div class="hero">
-      <div class="big">93.3%</div>
+      <div class="big">92.9%</div>
       <div class="lbl" data-i18n="cache-overall-label">Overall Cache Hit Ratio</div>
-      <div class="sub">305.6M cached / 327.7M total prompt tokens</div>
+      <div class="sub">316.4M cached / 340.4M total prompt tokens</div>
     </div>
     <div class="hero">
-      <div class="big">70.4%</div>
+      <div class="big">70.7%</div>
       <div class="lbl" data-i18n="cache-avg-label">Average Session Hit Ratio</div>
-      <div class="sub">1014 sessions · overall 93.3%</div>
+      <div class="sub">1081 sessions · overall 92.9%</div>
     </div>
   </div>
 
   <div class="grid-3">
     <div class="mini-card">
-      <div class="num">305.6M</div>
+      <div class="num">316.4M</div>
       <div class="lbl" data-i18n="cache-read">Cache Read</div>
     </div>
     <div class="mini-card">
@@ -313,7 +313,7 @@
       <div class="lbl" data-i18n="cache-write">Cache Write</div>
     </div>
     <div class="mini-card">
-      <div class="num">22.1M</div>
+      <div class="num">24.0M</div>
       <div class="lbl" data-i18n="fresh-input">Fresh Input</div>
     </div>
   </div>
@@ -329,12 +329,17 @@
       <div class="bar-row">
         <span class="bar-label"><code>deepseek-v4-flash</code></span>
         <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
-        <span class="bar-value">93.9%</span>
+        <span class="bar-value">93.8%</span>
       </div>
       <div class="bar-row">
         <span class="bar-label"><code>kimi-k2.6</code></span>
-        <div class="bar-track"><div class="bar-fill" style="width:98%"></div></div>
-        <span class="bar-value">91.6%</span>
+        <div class="bar-track"><div class="bar-fill" style="width:97%"></div></div>
+        <span class="bar-value">91.0%</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label"><code>null</code></span>
+        <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+        <span class="bar-value">0.0%</span>
       </div>
       <div class="bar-row">
         <span class="bar-label"><code>deepseek-v4-pro</code></span>
@@ -346,7 +351,7 @@
 
   <div class="section">
     <div class="section-title" data-i18n="cache-section-sessions">All Sessions</div>
-    <div class="filter-bar"><button class="filter-btn active" data-model="all" data-i18n="cache-filter-all">All</button><button class="filter-btn" data-model="deepseek-v4-flash">deepseek-v4-flash</button><button class="filter-btn" data-model="deepseek-v4-pro">deepseek-v4-pro</button><button class="filter-btn" data-model="kimi-k2.6">kimi-k2.6</button><button class="filter-btn" data-model="unknown">unknown</button></div>
+    <div class="filter-bar"><button class="filter-btn active" data-model="all" data-i18n="cache-filter-all">All</button><button class="filter-btn" data-model="deepseek-v4-flash">deepseek-v4-flash</button><button class="filter-btn" data-model="deepseek-v4-pro">deepseek-v4-pro</button><button class="filter-btn" data-model="kimi-k2.6">kimi-k2.6</button><button class="filter-btn" data-model="null">null</button><button class="filter-btn" data-model="unknown">unknown</button></div>
     <div class="table-wrap">
       <table class="data-table" id="sessionTable">
         <thead>
@@ -362,35 +367,705 @@
           </tr>
         </thead>
         <tbody id="sessionsBody">
+      <tr data-model="deepseek-v4-flash" title="cron_17b54b44ac0b_20260605_080020">
+        <td data-label="Started">2026-06-05 08:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">9.2K</td>
+        <td data-label="Cache Read">9.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">325</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">49.6%</span></td>
+        <td data-label="Msgs">0</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260605_080020">
+        <td data-label="Started">2026-06-05 08:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">2.7K</td>
+        <td data-label="Cache Read">0</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">213</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">0.0%</span></td>
+        <td data-label="Msgs">0</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_080020">
+        <td data-label="Started">2026-06-05 08:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">21.4K</td>
+        <td data-label="Cache Read">180.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">89.4%</span></td>
+        <td data-label="Msgs">26</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_073025">
+        <td data-label="Started">2026-06-05 07:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">28.1K</td>
+        <td data-label="Cache Read">274.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">4.9K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.7%</span></td>
+        <td data-label="Msgs">32</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_070026">
+        <td data-label="Started">2026-06-05 07:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.1K</td>
+        <td data-label="Cache Read">118.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">85.5%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_063025">
+        <td data-label="Started">2026-06-05 06:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">17.7K</td>
+        <td data-label="Cache Read">131.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">88.1%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_060055">
+        <td data-label="Started">2026-06-05 06:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.5K</td>
+        <td data-label="Cache Read">104.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">83.6%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260605_060055">
+        <td data-label="Started">2026-06-05 06:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">32.3K</td>
+        <td data-label="Cache Read">70.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">68.5%</span></td>
+        <td data-label="Msgs">10</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_053050">
+        <td data-label="Started">2026-06-05 05:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.6K</td>
+        <td data-label="Cache Read">153.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.9K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">88.2%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_050004">
+        <td data-label="Started">2026-06-05 05:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">14.3K</td>
+        <td data-label="Cache Read">94.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">86.8%</span></td>
+        <td data-label="Msgs">14</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_043038">
+        <td data-label="Started">2026-06-05 04:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">31.5K</td>
+        <td data-label="Cache Read">159.7K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">83.5%</span></td>
+        <td data-label="Msgs">23</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_040058">
+        <td data-label="Started">2026-06-05 04:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">24.3K</td>
+        <td data-label="Cache Read">102.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">80.8%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260605_040057">
+        <td data-label="Started">2026-06-05 04:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">32.8K</td>
+        <td data-label="Cache Read">142.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">6.9K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">81.3%</span></td>
+        <td data-label="Msgs">14</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_033043">
+        <td data-label="Started">2026-06-05 03:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">22.3K</td>
+        <td data-label="Cache Read">182.3K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">89.1%</span></td>
+        <td data-label="Msgs">22</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_030007">
+        <td data-label="Started">2026-06-05 03:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.8K</td>
+        <td data-label="Cache Read">170.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">89.1%</span></td>
+        <td data-label="Msgs">22</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_023038">
+        <td data-label="Started">2026-06-05 02:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">30.2K</td>
+        <td data-label="Cache Read">108.5K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">78.2%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_020002">
+        <td data-label="Started">2026-06-05 02:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.2K</td>
+        <td data-label="Cache Read">167.9K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">89.2%</span></td>
+        <td data-label="Msgs">22</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260605_020002">
+        <td data-label="Started">2026-06-05 02:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">32.4K</td>
+        <td data-label="Cache Read">103.7K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">76.2%</span></td>
+        <td data-label="Msgs">12</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_013032">
+        <td data-label="Started">2026-06-05 01:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">26.8K</td>
+        <td data-label="Cache Read">86.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">76.3%</span></td>
+        <td data-label="Msgs">14</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_010008">
+        <td data-label="Started">2026-06-05 01:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">11.2K</td>
+        <td data-label="Cache Read">10.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">431</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">47.8%</span></td>
+        <td data-label="Msgs">4</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_003027">
+        <td data-label="Started">2026-06-05 00:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">17.2K</td>
+        <td data-label="Cache Read">20.5K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">918</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">54.3%</span></td>
+        <td data-label="Msgs">6</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260605_000043">
+        <td data-label="Started">2026-06-05 00:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">23.7K</td>
+        <td data-label="Cache Read">81.9K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.5K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">77.6%</span></td>
+        <td data-label="Msgs">15</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260605_000043">
+        <td data-label="Started">2026-06-05 00:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">31.4K</td>
+        <td data-label="Cache Read">56.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.9K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">64.4%</span></td>
+        <td data-label="Msgs">11</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_233035">
+        <td data-label="Started">2026-06-04 23:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">31.7K</td>
+        <td data-label="Cache Read">173.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">84.5%</span></td>
+        <td data-label="Msgs">22</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_230011">
+        <td data-label="Started">2026-06-04 23:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">32.5K</td>
+        <td data-label="Cache Read">176.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">4.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">84.4%</span></td>
+        <td data-label="Msgs">24</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_223047">
+        <td data-label="Started">2026-06-04 22:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">28.1K</td>
+        <td data-label="Cache Read">124.9K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.6K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">81.6%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_9f321b611843_20260604_220013">
+        <td data-label="Started">2026-06-04 22:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.6K</td>
+        <td data-label="Cache Read">79.9K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.5K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">79.5%</span></td>
+        <td data-label="Msgs">21</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_220012">
+        <td data-label="Started">2026-06-04 22:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">27.5K</td>
+        <td data-label="Cache Read">155.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.6K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">85.0%</span></td>
+        <td data-label="Msgs">22</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_220013">
+        <td data-label="Started">2026-06-04 22:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">32.7K</td>
+        <td data-label="Cache Read">118.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">78.4%</span></td>
+        <td data-label="Msgs">13</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_d9dcc2661f01_20260604_213053">
+        <td data-label="Started">2026-06-04 21:30</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">4.9K</td>
+        <td data-label="Cache Read">6.7K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">465</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">57.8%</span></td>
+        <td data-label="Msgs">6</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_213052">
+        <td data-label="Started">2026-06-04 21:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">15.2K</td>
+        <td data-label="Cache Read">96.3K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">86.3%</span></td>
+        <td data-label="Msgs">14</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_210049">
+        <td data-label="Started">2026-06-04 21:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">25.8K</td>
+        <td data-label="Cache Read">69.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">72.9%</span></td>
+        <td data-label="Msgs">12</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_203027">
+        <td data-label="Started">2026-06-04 20:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">25.5K</td>
+        <td data-label="Cache Read">92.2K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">78.3%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_200058">
+        <td data-label="Started">2026-06-04 20:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">30.3K</td>
+        <td data-label="Cache Read">145.5K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">82.8%</span></td>
+        <td data-label="Msgs">15</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_200058">
+        <td data-label="Started">2026-06-04 20:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">24.3K</td>
+        <td data-label="Cache Read">133.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">84.6%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_193019">
+        <td data-label="Started">2026-06-04 19:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">28.4K</td>
+        <td data-label="Cache Read">129.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">82.0%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_190037">
+        <td data-label="Started">2026-06-04 19:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">26.2K</td>
+        <td data-label="Cache Read">84.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">76.2%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_183056">
+        <td data-label="Started">2026-06-04 18:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">29.1K</td>
+        <td data-label="Cache Read">129.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">81.6%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_180011">
+        <td data-label="Started">2026-06-04 18:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">31.6K</td>
+        <td data-label="Cache Read">88.3K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">73.6%</span></td>
+        <td data-label="Msgs">13</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_180011">
+        <td data-label="Started">2026-06-04 18:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.3K</td>
+        <td data-label="Cache Read">35.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">63.8%</span></td>
+        <td data-label="Msgs">8</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_173058">
+        <td data-label="Started">2026-06-04 17:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">16.8K</td>
+        <td data-label="Cache Read">21.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">55.5%</span></td>
+        <td data-label="Msgs">6</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_170044">
+        <td data-label="Started">2026-06-04 17:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">29.7K</td>
+        <td data-label="Cache Read">110.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">78.8%</span></td>
+        <td data-label="Msgs">19</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_163059">
+        <td data-label="Started">2026-06-04 16:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">19.4K</td>
+        <td data-label="Cache Read">34.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">969</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">64.2%</span></td>
+        <td data-label="Msgs">8</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_160015">
+        <td data-label="Started">2026-06-04 16:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">18.0K</td>
+        <td data-label="Cache Read">133.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">88.1%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_160015">
+        <td data-label="Started">2026-06-04 16:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">28.3K</td>
+        <td data-label="Cache Read">19.3K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.6K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">40.6%</span></td>
+        <td data-label="Msgs">7</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_153010">
+        <td data-label="Started">2026-06-04 15:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">15.0K</td>
+        <td data-label="Cache Read">96.3K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.9K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">86.5%</span></td>
+        <td data-label="Msgs">14</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_150550">
+        <td data-label="Started">2026-06-04 15:05</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">18.9K</td>
+        <td data-label="Cache Read">116.7K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">86.1%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="20260604_144959_646a76">
+        <td data-label="Started">2026-06-04 14:49</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">231.2K</td>
+        <td data-label="Cache Read">2.1M</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">20.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.1%</span></td>
+        <td data-label="Msgs">139</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_8e67fcb6bf5d_20260604_144121">
+        <td data-label="Started">2026-06-04 14:41</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">54.6K</td>
+        <td data-label="Cache Read">321.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">5.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">85.5%</span></td>
+        <td data-label="Msgs">38</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_143057">
+        <td data-label="Started">2026-06-04 14:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">25.5K</td>
+        <td data-label="Cache Read">122.9K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">82.8%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_140051">
+        <td data-label="Started">2026-06-04 14:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">20.7K</td>
+        <td data-label="Cache Read">80.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">79.6%</span></td>
+        <td data-label="Msgs">14</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_140051">
+        <td data-label="Started">2026-06-04 14:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">32.4K</td>
+        <td data-label="Cache Read">68.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">67.8%</span></td>
+        <td data-label="Msgs">10</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_133004">
+        <td data-label="Started">2026-06-04 13:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">16.6K</td>
+        <td data-label="Cache Read">21.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">742</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">55.8%</span></td>
+        <td data-label="Msgs">6</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_130003">
+        <td data-label="Started">2026-06-04 13:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">40.9K</td>
+        <td data-label="Cache Read">213.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.2K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">83.9%</span></td>
+        <td data-label="Msgs">30</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_123027">
+        <td data-label="Started">2026-06-04 12:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">16.7K</td>
+        <td data-label="Cache Read">21.0K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">717</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">55.7%</span></td>
+        <td data-label="Msgs">7</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_120015">
+        <td data-label="Started">2026-06-04 12:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">32.5K</td>
+        <td data-label="Cache Read">142.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">3.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">81.5%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_120015">
+        <td data-label="Started">2026-06-04 12:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">22.0K</td>
+        <td data-label="Cache Read">51.7K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">788</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">70.1%</span></td>
+        <td data-label="Msgs">10</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_113021">
+        <td data-label="Started">2026-06-04 11:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">14.9K</td>
+        <td data-label="Cache Read">110.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">1.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">88.1%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_110030">
+        <td data-label="Started">2026-06-04 11:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">17.3K</td>
+        <td data-label="Cache Read">110.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">86.5%</span></td>
+        <td data-label="Msgs">16</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_103043">
+        <td data-label="Started">2026-06-04 10:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">32.9K</td>
+        <td data-label="Cache Read">187.4K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">4.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">85.1%</span></td>
+        <td data-label="Msgs">28</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_100056">
+        <td data-label="Started">2026-06-04 10:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">26.1K</td>
+        <td data-label="Cache Read">68.1K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">72.3%</span></td>
+        <td data-label="Msgs">18</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_100056">
+        <td data-label="Started">2026-06-04 10:00</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">44.1K</td>
+        <td data-label="Cache Read">98.8K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">7.3K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">69.1%</span></td>
+        <td data-label="Msgs">15</td>
+      </tr>
+      <tr data-model="deepseek-v4-flash" title="cron_d9dcc2661f01_20260604_093025">
+        <td data-label="Started">2026-06-04 09:30</td>
+        <td data-label="Model"><code>deepseek-v4-flash</code></td>
+        <td data-label="Input">2.6K</td>
+        <td data-label="Cache Read">0</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">126</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">0.0%</span></td>
+        <td data-label="Msgs">2</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_093024">
+        <td data-label="Started">2026-06-04 09:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">26.9K</td>
+        <td data-label="Cache Read">192.5K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">6.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">87.8%</span></td>
+        <td data-label="Msgs">24</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_090056">
+        <td data-label="Started">2026-06-04 09:00</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">17.7K</td>
+        <td data-label="Cache Read">153.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.8K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">89.7%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
+      <tr data-model="null" title="cron_8e67fcb6bf5d_20260604_090056">
+        <td data-label="Started">2026-06-04 09:00</td>
+        <td data-label="Model"><code>null</code></td>
+        <td data-label="Input">0</td>
+        <td data-label="Cache Read">0</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">0</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-bad">0.0%</span></td>
+        <td data-label="Msgs">1</td>
+      </tr>
+      <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_083000">
+        <td data-label="Started">2026-06-04 08:30</td>
+        <td data-label="Model"><code>kimi-k2.6</code></td>
+        <td data-label="Input">18.5K</td>
+        <td data-label="Cache Read">151.6K</td>
+        <td data-label="Cache Write">0</td>
+        <td data-label="Output">2.4K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">89.1%</span></td>
+        <td data-label="Msgs">20</td>
+      </tr>
       <tr data-model="deepseek-v4-flash" title="cron_17b54b44ac0b_20260604_080049">
         <td data-label="Started">2026-06-04 08:00</td>
         <td data-label="Model"><code>deepseek-v4-flash</code></td>
-        <td data-label="Input">9.2K</td>
-        <td data-label="Cache Read">18.6K</td>
+        <td data-label="Input">9.5K</td>
+        <td data-label="Cache Read">37.8K</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">465</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-mid">67.0%</span></td>
-        <td data-label="Msgs">0</td>
+        <td data-label="Output">828</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-mid">79.9%</span></td>
+        <td data-label="Msgs">10</td>
       </tr>
       <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_080049">
         <td data-label="Started">2026-06-04 08:00</td>
         <td data-label="Model"><code>kimi-k2.6</code></td>
-        <td data-label="Input">384</td>
-        <td data-label="Cache Read">10.2K</td>
+        <td data-label="Input">18.1K</td>
+        <td data-label="Cache Read">116.7K</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">80</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-good">96.4%</span></td>
-        <td data-label="Msgs">0</td>
+        <td data-label="Output">3.0K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">86.6%</span></td>
+        <td data-label="Msgs">16</td>
       </tr>
       <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260604_080049">
         <td data-label="Started">2026-06-04 08:00</td>
         <td data-label="Model"><code>deepseek-v4-flash</code></td>
-        <td data-label="Input">16.2K</td>
-        <td data-label="Cache Read">2.7K</td>
+        <td data-label="Input">35.2K</td>
+        <td data-label="Cache Read">323.5K</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">359</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-bad">14.2%</span></td>
-        <td data-label="Msgs">0</td>
+        <td data-label="Output">4.7K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.2%</span></td>
+        <td data-label="Msgs">25</td>
       </tr>
       <tr data-model="kimi-k2.6" title="cron_a64f939b8b20_20260604_073014">
         <td data-label="Started">2026-06-04 07:30</td>
@@ -2015,12 +2690,12 @@
       <tr data-model="deepseek-v4-flash" title="20260601_195936_0f4845">
         <td data-label="Started">2026-06-01 19:59</td>
         <td data-label="Model"><code>deepseek-v4-flash</code></td>
-        <td data-label="Input">499.5K</td>
-        <td data-label="Cache Read">4.8M</td>
+        <td data-label="Input">631.3K</td>
+        <td data-label="Cache Read">6.0M</td>
         <td data-label="Cache Write">0</td>
-        <td data-label="Output">23.1K</td>
-        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.5%</span></td>
-        <td data-label="Msgs">154</td>
+        <td data-label="Output">26.1K</td>
+        <td data-label="Hit Ratio"><span class="ratio ratio-good">90.4%</span></td>
+        <td data-label="Msgs">176</td>
       </tr>
       <tr data-model="deepseek-v4-flash" title="cron_1272e71e2852_20260601_195803">
         <td data-label="Started">2026-06-01 19:58</td>

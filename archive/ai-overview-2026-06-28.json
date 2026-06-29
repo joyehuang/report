@@ -1,0 +1,21 @@
+{
+  "date_range": "Jun 22 - Jun 28, 2026",
+  "coding_time": "42h 22m",
+  "ai_in": "247.7M",
+  "ai_out": "1.5M",
+  "prompts": "0",
+  "tokens_total": "249.1M",
+  "ai_additions": "23.1K",
+  "line_changes": "23.9K",
+  "cost": "$0",
+  "categories": [
+    {
+      "name": "AI Coding",
+      "text": "33h 22m"
+    },
+    {
+      "name": "Coding",
+      "text": "9h 00m"
+    }
+  ]
+}

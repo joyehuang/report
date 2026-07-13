@@ -1,0 +1,25 @@
+{
+  "date_range": "Jul 6 - Jul 12, 2026",
+  "coding_time": "39h 29m",
+  "ai_in": "1915.2M",
+  "ai_out": "4.8M",
+  "prompts": "0",
+  "tokens_total": "1920.1M",
+  "ai_additions": "22.4K",
+  "line_changes": "24.2K",
+  "cost": "$0",
+  "categories": [
+    {
+      "name": "AI Coding",
+      "text": "37h 27m"
+    },
+    {
+      "name": "Coding",
+      "text": "2h 01m"
+    },
+    {
+      "name": "Debugging",
+      "text": "0m"
+    }
+  ]
+}

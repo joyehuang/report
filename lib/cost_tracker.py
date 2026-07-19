@@ -47,7 +47,7 @@ def add_bill(date: str, provider: str, cost: float, currency: str = "USD", note:
         note: optional note
     """
     # Exchange rates (approximate, user can adjust)
-    rates = {"USD": 1.0, "CNY": 0.1475, "AUD": 0.6947}
+    rates = {"USD": 1.0, "CNY": 0.1476, "AUD": 0.6969}
     rate = rates.get(currency.upper(), 1.0)
     cost_usd = round(cost * rate, 2)
 
